@@ -4,8 +4,8 @@ namespace GameDevLib
     /// <summary>
     /// Observer interface.
     /// </summary>
-    public interface IObserver
+    public interface IObserver<T>
     {
-        void OnEventRaised(ISubject subject); 
+        void OnEventRaised(ISubject<T> subject); 
     }
 }
