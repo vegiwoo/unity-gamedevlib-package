@@ -6,6 +6,11 @@ namespace GameDevLib
     /// </summary>
     public interface IObserver<T>
     {
-        void OnEventRaised(ISubject<T> subject); 
+        /// <summary>
+        /// Called by publisher when an event occurs.
+        /// </summary>
+        /// <param name="subject">Publisher who published event.</param>
+        /// <param name="args">Arguments passed with event.</param>
+        void OnEventRaised(ISubject<T> subject, T args); 
     }
 }
