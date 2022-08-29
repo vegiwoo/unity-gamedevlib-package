@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 using Cinemachine;
 using GameDevLib.Args;
 using GameDevLib.Events;
-using UnityEngine.InputSystem;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Cameras {
@@ -24,11 +22,13 @@ namespace GameDevLib.Cameras {
         [SerializeField] private Canvas vCamAimCanvas;
         #endregion
         
+        #region Constants and variables
         private const int VCamNormalPriority = 10;
-        private const int VCamFOV = 40;
-        
         private const int VCamAimPriority = 9;
+        private const int VCamFOV = 40;
+        #endregion
         
+        #region MonoBehaviour methods
         private void Start()
         {
             const string helpString = 
@@ -62,7 +62,9 @@ namespace GameDevLib.Cameras {
         {
             inputManagerEvent.Detach(this);
         }
-
+        #endregion
+        
+        #region Functionality
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
             if(args.Aiming == null) return;
@@ -81,6 +83,7 @@ namespace GameDevLib.Cameras {
                     break;
             }
         }
+        #endregion
     }
 }
 

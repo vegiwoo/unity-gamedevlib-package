@@ -1,5 +1,5 @@
 {
-    "name": "PlayerInput01",
+    "name": "PlayerInput",
     "maps": [
         {
             "name": "Player",
@@ -72,6 +72,15 @@
                     "name": "Using",
                     "type": "Button",
                     "id": "5cb60012-4d47-4221-8b8d-dded2c1a9924",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Light",
+                    "type": "Button",
+                    "id": "9e63eb3a-98d4-4af3-92b6-b3e798b43fb6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -274,6 +283,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Fling",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "896c6cda-d90c-4f9e-97f6-be3800507a1e",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Light",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

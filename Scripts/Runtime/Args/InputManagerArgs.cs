@@ -3,20 +3,25 @@ using UnityEngine;
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public class InputManagerArgs
+    public sealed class InputManagerArgs
     {
-        public bool? Aiming { get;}
+        #region Properties
         public Vector2? Moving { get;}
         public bool? Running { get;}
         public bool? Jumping { get;}
+        public bool? Aiming { get;}
+        public bool? Lighting { get;}
+        #endregion
 
-        public InputManagerArgs(bool? aiming = null, Vector2? moving = null, bool? running = null, bool? jumping = null)
+        #region Constructors
+        public InputManagerArgs(Vector2? moving = null, bool? running = null, bool? jumping = null, bool? aiming = null, bool? lighting = null)
         {
-            Aiming = aiming;
             Moving = moving;
             Running = running;
             Jumping = jumping;
+            Aiming = aiming;
+            Lighting = lighting;
         }
+        #endregion 
     }
 }
-

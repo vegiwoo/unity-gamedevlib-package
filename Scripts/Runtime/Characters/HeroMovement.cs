@@ -8,12 +8,10 @@ using UnityEngine;
 namespace GameDevLib.Characters
 {
     [RequireComponent(typeof(CharacterController))]
-    public class PlayerMovement : MonoBehaviour, IObserver<InputManagerArgs>
+    public class HeroMovement : MonoBehaviour, IObserver<InputManagerArgs>
     {
         #region Links
-        [Header("Stats")] 
-        [SerializeField] private CharacterStats stats;
-        [Header("Events")]
+        private Character _character;
         [SerializeField] private InputManagerEvent inputManagerEvent;
         
         private Camera _mainCamera;
@@ -34,12 +32,13 @@ namespace GameDevLib.Characters
         private void Awake()
         {
             _mainCamera = Camera.main;
+            _character = GetComponentInParent<Character>();
             _characterController = GetComponent<CharacterController>();
         }
 
         private void Start()
         {
-            _currentHp = stats.MaxHp;
+            _currentHp = _character.Stats.MaxHp;
         }
 
         private void Update()
@@ -79,10 +78,10 @@ namespace GameDevLib.Characters
                 move = move.x * camTransform.right.normalized + move.z * camTransform.forward.normalized;
                 move.y = 0f;
 
-                _currentSpeed = stats.BaseMovingSpeed;
+                _currentSpeed = _character.Stats.BaseMovingSpeed;
                 if (_args.Running != null && _args.Running.Value)
                 {
-                    _currentSpeed += stats.AccelerationFactor;
+                    _currentSpeed += _character.Stats.AccelerationFactor;
                 }
                 
                 _characterController.Move(move * (_currentSpeed * Time.deltaTime));
@@ -91,7 +90,7 @@ namespace GameDevLib.Characters
             // Jumping player
             if (_args.Jumping is true && _groundedPlayer)
             {
-                _playerVelocity.y += Mathf.Sqrt(stats.JumpHeight * -3.0f * Data.Gravity);
+                _playerVelocity.y += Mathf.Sqrt(_character.Stats.JumpHeight * -3.0f * Data.Gravity);
             }
             
             _playerVelocity.y += Data.Gravity * Time.deltaTime;
@@ -99,13 +98,12 @@ namespace GameDevLib.Characters
             
             // Rotate towards camera direction 
             var rotation = Quaternion.Euler(0, _mainCamera.transform.eulerAngles.y, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, stats.BaseRotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, _character.Stats.BaseRotationSpeed * Time.deltaTime);
         }
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
             _args = args;
         }
         #endregion
-
     }
 }

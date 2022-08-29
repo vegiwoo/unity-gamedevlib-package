@@ -1,3 +1,4 @@
+using GameDevLib.Enums;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -6,6 +7,11 @@ namespace GameDevLib.Stats
     [CreateAssetMenu(fileName = "CharacterStats", menuName = "Stats/CharacterStats", order = 1)]
     public class CharacterStats : ScriptableObject
     {
+        #region Properties
+        
+        [field: SerializeField] 
+        public CharacterType type;
+        
         [field: SerializeField] 
         public float MaxHp { get; set; }
         
@@ -20,5 +26,6 @@ namespace GameDevLib.Stats
         
         [field: SerializeField, Range(0.5f, 1.0f)]
         public float JumpHeight { get; set; }
+        #endregion
     }
 }

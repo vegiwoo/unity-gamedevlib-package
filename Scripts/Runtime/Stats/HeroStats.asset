@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HeroStats
   m_EditorClassIdentifier: 
   <MaxHp>k__BackingField: 120
-  <BaseMovingSpeed>k__BackingField: 3
-  <BaseRotationSpeed>k__BackingField: 1.5
-  <AccelerationFactor>k__BackingField: 1.5
+  <BaseMovingSpeed>k__BackingField: 4
+  <BaseRotationSpeed>k__BackingField: 4
+  <AccelerationFactor>k__BackingField: 5
   <JumpHeight>k__BackingField: 0.75
