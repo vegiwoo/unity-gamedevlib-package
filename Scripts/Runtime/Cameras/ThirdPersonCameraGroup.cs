@@ -73,13 +73,11 @@ namespace GameDevLib.Cameras {
                     vCamAim.Priority += priorityBoostAmount;
                     vCamNormalCanvas.enabled = false;
                     vCamAimCanvas.enabled = true;
-                    Debug.Log("Aiming!");
                     break;
                 case false:
                     vCamAim.Priority -= priorityBoostAmount;
                     vCamAimCanvas.enabled = false;
                     vCamNormalCanvas.enabled = true;
-                    Debug.Log("No aiming!");
                     break;
             }
         }

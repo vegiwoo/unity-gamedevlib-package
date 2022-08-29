@@ -1,18 +1,15 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using GameDevLib.Args;
 using GameDevLib.Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using GameDevLib.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Managers
 {
     public enum InputKey
     {
-        None, Move, Run, Look, Jump, Aim, Fire, Fling, Using
+        Move, Run, Look, Jump, Aim, Fire, Fling, Using
     }
 
     public class InputManager : MonoBehaviour
@@ -34,9 +31,10 @@ namespace GameDevLib.Managers
         private InputAction _flingAction;
         private InputAction _usingAction;
         
-        private Vector2 _moving;
+        private Vector2 _movingDestination;
         private bool _isRunning;
         private bool _isJumping;
+        private bool? _isAiming;
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
@@ -53,8 +51,9 @@ namespace GameDevLib.Managers
         
         private void Start()
         {
-            _moving = Vector2.zero;
+            _movingDestination = Vector2.zero;
             _isRunning = _isJumping = false;
+            _isAiming = null;
         }
 
         private void OnEnable()
@@ -89,17 +88,10 @@ namespace GameDevLib.Managers
 
         private void Moving(InputAction.CallbackContext context)
         {
-            switch (context.phase)
-            {
-                case InputActionPhase.Performed:
-                    _moving = context.ReadValue<Vector2>();
-                    break;
-                case InputActionPhase.Canceled:
-                    _moving = Vector2.zero;
-                    break;
-            }
-            var args = new InputManagerArgs(null, _moving, _isRunning, _isJumping);
-            inputManagerEvent.Notify(args);
+            if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
+            
+            _movingDestination = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+            Notify();
         }
 
         private void Running(InputAction.CallbackContext context)
@@ -107,31 +99,31 @@ namespace GameDevLib.Managers
             if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
             
             _isRunning = context.performed;
-            var args = new InputManagerArgs(null, _moving, _isRunning, _isJumping);
-            inputManagerEvent.Notify(args);
+            Notify();
         }
 
         private void Jumping(InputAction.CallbackContext context)
         {
             if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
-
+            
             _isJumping = _actions[InputKey.Jump].triggered;
-            var args = new InputManagerArgs(null, _moving, _isRunning, _isJumping);
-            inputManagerEvent.Notify(args);
+            Notify();
         }
         
         private void Aiming(InputAction.CallbackContext context)
         {
-            InputManagerArgs args = default;
-            switch (context.phase)
+            if (context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled))
             {
-                case InputActionPhase.Performed:
-                    args = new InputManagerArgs(true);
-                    break;
-                case InputActionPhase.Canceled:
-                    args = new InputManagerArgs(false);
-                    break;
+                _isAiming = null;  
+                return;
             }
+            _isAiming = context.performed; 
+            Notify();
+        }
+
+        private void Notify()
+        {
+            var args = new InputManagerArgs(_isAiming, _movingDestination, _isRunning, _isJumping);
             inputManagerEvent.Notify(args);
         }
     }
