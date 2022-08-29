@@ -3,9 +3,7 @@
   "version": "1.0.1",
   "displayName": "Game Development Library",
   "dependencies": {
-    "cinemachine": "2.8.6"
+    "com.unity.cinemachine": "2.8.6"
   },
-  "enableLockFile": true,
-  "resolutionStrategy": "highestMinor",
   "description": "Package contains commonly used entities and libraries for game development in Unity and C#"
 }
