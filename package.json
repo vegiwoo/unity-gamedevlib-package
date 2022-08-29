@@ -2,8 +2,15 @@
   "name": "com.vegi.gamedevlib",
   "version": "1.0.1",
   "displayName": "Game Development Library",
+  "unity": "2021.3",
   "dependencies": {
+    "com.unity.inputsystem": "1.4.2",
     "com.unity.cinemachine": "2.8.6"
   },
-  "description": "Package contains commonly used entities and libraries for game development in Unity and C#"
+  "description": "Package contains commonly used entities and libraries for game development in Unity and C#",
+  "author": {
+    "name": "Dmitry Samartcev",
+    "email": "vegiwoo@protonmail.com",
+    "url": "https://www.vegi.dev"
+  }
 }
