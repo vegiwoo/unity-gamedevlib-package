@@ -3,6 +3,6 @@ namespace GameDevLib
 {
     public static class Data
     {
-        public const float Gravity = 9.81f;
+        public const float Gravity = -9.81f;
     }
 }
