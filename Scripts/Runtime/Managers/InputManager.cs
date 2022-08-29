@@ -34,6 +34,8 @@ namespace GameDevLib.Managers
         private InputAction _flingAction;
         private InputAction _usingAction;
 
+
+        private Vector2 _moving = Vector2.zero;
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
@@ -50,14 +52,70 @@ namespace GameDevLib.Managers
 
         private void OnEnable()
         {
+            _actions[InputKey.Move].performed += Moving;
+            _actions[InputKey.Move].canceled += Moving;
+            
+            _actions[InputKey.Run].performed += Running;
+            _actions[InputKey.Run].canceled += Running;
+
+            _actions[InputKey.Jump].performed += Jumping;
+            
             _actions[InputKey.Aim].performed += Aiming;
             _actions[InputKey.Aim].canceled += Aiming;
         }
         
         private void OnDisable()
         {
+            _actions[InputKey.Move].performed -= Moving;
+            _actions[InputKey.Move].canceled -= Moving;
+            
+            _actions[InputKey.Run].performed -= Running;
+            _actions[InputKey.Run].canceled -= Running;
+
+            _actions[InputKey.Jump].performed -= Jumping;
+            
             _actions[InputKey.Aim].performed -= Aiming;
             _actions[InputKey.Aim].canceled -= Aiming;
+        }
+
+        private void Moving(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                    _moving = context.ReadValue<Vector2>();
+                    break;
+                case InputActionPhase.Canceled:
+                    _moving = Vector2.zero;
+                    break;
+            }
+            var args = new InputManagerArgs(null, _moving);
+            inputManagerEvent.Notify(args);
+        }
+
+        private void Running(InputAction.CallbackContext context)
+        {
+            if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
+            
+            InputManagerArgs args = default;
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                    args = new InputManagerArgs(null, _moving, true);
+                    break;
+                case InputActionPhase.Canceled:
+                    args = new InputManagerArgs(null, _moving, false);
+                    break;
+            }
+            inputManagerEvent.Notify(args);
+        }
+
+        private void Jumping(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            
+            var args = new InputManagerArgs(null, null, null, true);
+            inputManagerEvent.Notify(args);
         }
         
         private void Aiming(InputAction.CallbackContext context)
@@ -72,7 +130,6 @@ namespace GameDevLib.Managers
                     args = new InputManagerArgs(false);
                     break;
             }
-            
             inputManagerEvent.Notify(args);
         }
     }
