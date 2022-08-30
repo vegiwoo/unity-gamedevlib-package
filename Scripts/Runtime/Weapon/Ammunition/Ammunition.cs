@@ -20,7 +20,10 @@ namespace GameDevLib.Ammunition
         protected void Start()
         {
             AmmunitionRigidbody = GetComponent<Rigidbody>();
-            collisionEffect.Stop();
+            if (collisionEffect != null)
+            {
+                collisionEffect.Stop();
+            }
         }
         #endregion
     }

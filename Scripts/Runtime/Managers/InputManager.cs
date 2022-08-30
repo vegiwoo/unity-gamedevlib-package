@@ -38,6 +38,7 @@ namespace GameDevLib.Managers
         private bool _isJumping;
         private bool? _isAiming;
         private bool? _isLighting;
+        private bool? _isFiring;
 
         #endregion
         
@@ -79,6 +80,8 @@ namespace GameDevLib.Managers
             _actions[InputKey.Aim].canceled += Aiming;
             
             _actions[InputKey.Light].performed += Lighting;
+
+            _actions[InputKey.Fire].performed += Firing;
         }
         
         private void OnDisable()
@@ -96,6 +99,8 @@ namespace GameDevLib.Managers
             _actions[InputKey.Aim].canceled -= Aiming;
             
             _actions[InputKey.Light].performed -= Lighting;
+            
+            _actions[InputKey.Fire].performed -= Firing;
         }
         #endregion
         
@@ -146,9 +151,17 @@ namespace GameDevLib.Managers
             Notify();
         }
 
+        private void Firing(InputAction.CallbackContext context)
+        {
+            if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
+            
+            _isFiring = _actions[InputKey.Fire].triggered;
+            Notify();
+        }
+
         private void Notify()
         {
-            var args = new InputManagerArgs( _movingDestination, _isRunning, _isJumping, _isAiming, _isLighting);
+            var args = new InputManagerArgs( _movingDestination, _isRunning, _isJumping, _isAiming, _isLighting, _isFiring);
             inputManagerEvent.Notify(args);
         }
         #endregion

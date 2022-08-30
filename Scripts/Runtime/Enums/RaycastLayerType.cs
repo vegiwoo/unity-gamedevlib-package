@@ -1,8 +1,8 @@
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Enums
 {
-    public enum CharacterType 
+    public enum RaycastLayerType
     {
-        Hero, Enemy
+        Ignorance, Interaction
     }
 }

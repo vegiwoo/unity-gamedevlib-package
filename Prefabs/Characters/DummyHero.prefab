@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 2559826173985187415}
   - component: {fileID: 6070492919117840497}
   - component: {fileID: 483548314243013990}
+  - component: {fileID: 8090319786333072523}
   m_Layer: 0
   m_Name: DummyHero
   m_TagString: Player
@@ -328,6 +329,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManagerEvent: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
+--- !u!114 &8090319786333072523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3394252275034371614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d456e03845d42d7aa134d76640a63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <LayerMask>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 8
+  <AimColor>k__BackingField: {r: 0.05900679, g: 0.1254902, b: 0.9622642, a: 0}
+  inputEvent: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
 --- !u!1 &3394252275081394168
 GameObject:
   m_ObjectHideFlags: 0

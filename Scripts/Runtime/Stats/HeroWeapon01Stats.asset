@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: HeroWeapon01Stats
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 0
-  <BulletPrefab>k__BackingField: {fileID: 0}
+  <BulletPrefab>k__BackingField: {fileID: 4169109616351658530, guid: 67d6e944723e44017b12169e909f9f85, type: 3}
   <ShotRange>k__BackingField: 25
-  <ShotDelay>k__BackingField: 2.5
-  <TiltAngleInDeg>k__BackingField: 25
+  <ShotDelay>k__BackingField: 1.5
+  <TiltAngleInDeg>k__BackingField: 0
   <DamagePerShot>k__BackingField: 10
   <IsHaveFlashlight>k__BackingField: 1
+  <FlashlightIntensity>k__BackingField: 7
+  <FlashlightRange>k__BackingField: 12
+  <FlashlightAngle>k__BackingField: 40

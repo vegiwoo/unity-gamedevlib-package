@@ -11,16 +11,18 @@ namespace GameDevLib.Args
         public bool? Jumping { get;}
         public bool? Aiming { get;}
         public bool? Lighting { get;}
+        public bool? Firing { get;}
         #endregion
 
         #region Constructors
-        public InputManagerArgs(Vector2? moving = null, bool? running = null, bool? jumping = null, bool? aiming = null, bool? lighting = null)
+        public InputManagerArgs(Vector2? moving = null, bool? running = null, bool? jumping = null, bool? aiming = null, bool? lighting = null, bool? firing = null)
         {
             Moving = moving;
             Running = running;
             Jumping = jumping;
             Aiming = aiming;
             Lighting = lighting;
+            Firing = firing;
         }
         #endregion 
     }

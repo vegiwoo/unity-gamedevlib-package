@@ -18,7 +18,7 @@ namespace GameDevLib.Args
         
         #region Constructors
 
-        private BulletArgs(string targetTag, Transform pointOfShoot, Vector3 targetPosition, float speed, float range, int damage)
+        public BulletArgs(string targetTag, Transform pointOfShoot, Vector3 targetPosition, float speed, float range, int damage)
         {
             TargetTag = targetTag;
             PointOfShoot = pointOfShoot;
