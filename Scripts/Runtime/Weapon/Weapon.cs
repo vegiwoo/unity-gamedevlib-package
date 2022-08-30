@@ -180,9 +180,9 @@ namespace GameDevLib.Weapon
         
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
-            if (args.Lighting != null && stats.IsHaveFlashlight)
+            if (stats.IsHaveFlashlight)
             {
-                flashLight.enabled = !flashLight.enabled;
+                flashLight.enabled = args.Lighting;
             }
         }
         #endregion

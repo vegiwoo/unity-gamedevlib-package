@@ -34,7 +34,7 @@ namespace GameDevLib.Managers
         private bool _isRunning;
         private bool _isJumping;
         private bool? _isAiming;
-        private bool? _isLighting;
+        private bool _isLighting;
         private bool? _isFiring;
 
         #endregion
@@ -58,8 +58,8 @@ namespace GameDevLib.Managers
         private void Start()
         {
             _movingDestination = Vector2.zero;
-            _isRunning = _isJumping = false;
-            _isAiming = _isLighting = _isFiring = null;
+            _isRunning = _isJumping =_isLighting = false;
+            _isAiming = _isFiring = null;
         }
 
         private void OnEnable()
@@ -141,12 +141,12 @@ namespace GameDevLib.Managers
 
         private void Lighting(InputAction.CallbackContext context)
         {
-            if (context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled))
+            if (context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled) || !context.action.triggered)
             {
-                _isLighting = null;
                 return;
-            }
-            _isLighting = context.action.triggered;
+            } 
+            
+            _isLighting = !_isLighting; 
             Notify();
         }
 
@@ -164,7 +164,7 @@ namespace GameDevLib.Managers
 
         private void Notify()
         {
-            var args = new InputManagerArgs( _movingDestination, _isRunning, _isJumping, _isAiming, _isLighting, _isFiring);
+            var args = new InputManagerArgs( _isLighting, _movingDestination, _isRunning, _isJumping, _isAiming, _isFiring);
             inputManagerEvent.Notify(args);
         }
         #endregion
