@@ -1,3 +1,4 @@
+using System;
 using GameDevLib.Args;
 using GameDevLib.Enums;
 using GameDevLib.Events;
@@ -35,7 +36,7 @@ namespace GameDevLib.Managers
         private bool _isJumping;
         private bool? _isAiming;
         private bool _isLighting;
-        private bool? _isFiring;
+        private bool _isFiring;
 
         #endregion
         
@@ -58,8 +59,8 @@ namespace GameDevLib.Managers
         private void Start()
         {
             _movingDestination = Vector2.zero;
-            _isRunning = _isJumping =_isLighting = false;
-            _isAiming = _isFiring = null;
+            _isRunning = _isJumping =_isLighting = _isFiring = false;
+            _isAiming = null;
         }
 
         private void OnEnable()
@@ -79,6 +80,7 @@ namespace GameDevLib.Managers
             _actions[InputManagerKey.Light].performed += Lighting;
 
             _actions[InputManagerKey.Fire].performed += Firing;
+            _actions[InputManagerKey.Fire].canceled += Firing;
         }
         
         private void OnDisable()
@@ -100,6 +102,7 @@ namespace GameDevLib.Managers
             _actions[InputManagerKey.Light].performed -= Lighting;
             
             _actions[InputManagerKey.Fire].performed -= Firing;
+            _actions[InputManagerKey.Fire].canceled -= Firing;
         }
         #endregion
         
@@ -154,17 +157,24 @@ namespace GameDevLib.Managers
         {
             if (context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled))
             {
-                _isFiring = null;
                 return;
+            } 
+    
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                    _isFiring = true;
+                    break;
+                case InputActionPhase.Canceled:
+                    _isFiring = false;
+                    break;
             }
-            
-            _isFiring = _actions[InputManagerKey.Fire].triggered;
             Notify();
         }
 
         private void Notify()
         {
-            var args = new InputManagerArgs( _isLighting, _movingDestination, _isRunning, _isJumping, _isAiming, _isFiring);
+            var args = new InputManagerArgs( _isLighting, _isFiring, _movingDestination, _isRunning, _isJumping, _isAiming);
             inputManagerEvent.Notify(args);
         }
         #endregion
