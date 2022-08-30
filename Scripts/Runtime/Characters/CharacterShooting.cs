@@ -125,9 +125,6 @@ namespace GameDevLib.Characters
             return hit;
         }
         
-        
-        
-        
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
             if (args.Firing != null && args.Firing.Value)

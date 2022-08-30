@@ -1,17 +1,14 @@
-using System.Collections.Generic;
 using GameDevLib.Args;
+using GameDevLib.Enums;
 using GameDevLib.Events;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Managers
 {
-    public enum InputKey
-    {
-        Move, Run, Look, Jump, Aim, Light,Fire, Fling, Using
-    }
-
+    [RequireComponent(typeof(PlayerInput))]
     public class InputManager : MonoBehaviour
     {
         #region Links
@@ -21,7 +18,7 @@ namespace GameDevLib.Managers
 
         #region Constants and variables
         
-        private readonly Dictionary<InputKey, InputAction> _actions = new ();
+        private readonly Dictionary<InputManagerKey, InputAction> _actions = new ();
         
         private InputAction _moveAction;
         private InputAction _runAction;
@@ -47,62 +44,62 @@ namespace GameDevLib.Managers
         {
             _playerInput = GetComponent<PlayerInput>();
 
-            _actions[InputKey.Move] = _playerInput.actions[InputKey.Move.ToString()];
-            _actions[InputKey.Run] = _playerInput.actions[InputKey.Run.ToString()];
-            _actions[InputKey.Look] = _playerInput.actions[InputKey.Look.ToString()];
-            _actions[InputKey.Jump] = _playerInput.actions[InputKey.Jump.ToString()];
-            _actions[InputKey.Aim] = _playerInput.actions[InputKey.Aim.ToString()];
-            _actions[InputKey.Light] = _playerInput.actions[InputKey.Light.ToString()];
-            _actions[InputKey.Fire] = _playerInput.actions[InputKey.Fire.ToString()];
-            _actions[InputKey.Fling] = _playerInput.actions[InputKey.Fling.ToString()];
-            _actions[InputKey.Using] = _playerInput.actions[InputKey.Using.ToString()];
+            _actions[InputManagerKey.Move] = _playerInput.actions[InputManagerKey.Move.ToString()];
+            _actions[InputManagerKey.Run] = _playerInput.actions[InputManagerKey.Run.ToString()];
+            _actions[InputManagerKey.Look] = _playerInput.actions[InputManagerKey.Look.ToString()];
+            _actions[InputManagerKey.Jump] = _playerInput.actions[InputManagerKey.Jump.ToString()];
+            _actions[InputManagerKey.Aim] = _playerInput.actions[InputManagerKey.Aim.ToString()];
+            _actions[InputManagerKey.Light] = _playerInput.actions[InputManagerKey.Light.ToString()];
+            _actions[InputManagerKey.Fire] = _playerInput.actions[InputManagerKey.Fire.ToString()];
+            _actions[InputManagerKey.Fling] = _playerInput.actions[InputManagerKey.Fling.ToString()];
+            _actions[InputManagerKey.Using] = _playerInput.actions[InputManagerKey.Using.ToString()];
         }
         
         private void Start()
         {
             _movingDestination = Vector2.zero;
             _isRunning = _isJumping = false;
-            _isAiming = null;
+            _isAiming = _isLighting = _isFiring = null;
         }
 
         private void OnEnable()
         {
-            _actions[InputKey.Move].performed += Moving;
-            _actions[InputKey.Move].canceled += Moving;
+            _actions[InputManagerKey.Move].performed += Moving;
+            _actions[InputManagerKey.Move].canceled += Moving;
             
-            _actions[InputKey.Run].performed += Running;
-            _actions[InputKey.Run].canceled += Running;
+            _actions[InputManagerKey.Run].performed += Running;
+            _actions[InputManagerKey.Run].canceled += Running;
 
-            _actions[InputKey.Jump].performed += Jumping;
-            _actions[InputKey.Jump].canceled += Jumping;
+            _actions[InputManagerKey.Jump].performed += Jumping;
+            _actions[InputManagerKey.Jump].canceled += Jumping;
             
-            _actions[InputKey.Aim].performed += Aiming;
-            _actions[InputKey.Aim].canceled += Aiming;
+            _actions[InputManagerKey.Aim].performed += Aiming;
+            _actions[InputManagerKey.Aim].canceled += Aiming;
             
-            _actions[InputKey.Light].performed += Lighting;
+            _actions[InputManagerKey.Light].performed += Lighting;
 
-            _actions[InputKey.Fire].performed += Firing;
+            _actions[InputManagerKey.Fire].performed += Firing;
         }
         
         private void OnDisable()
         {
             if(_actions == null || _actions.Count == 0) return;
             
-            _actions[InputKey.Move].performed -= Moving;
-            _actions[InputKey.Move].canceled -= Moving;
+            _actions[InputManagerKey.Move].performed -= Moving;
+            _actions[InputManagerKey.Move].canceled -= Moving;
             
-            _actions[InputKey.Run].performed -= Running;
-            _actions[InputKey.Run].canceled -= Running;
+            _actions[InputManagerKey.Run].performed -= Running;
+            _actions[InputManagerKey.Run].canceled -= Running;
 
-            _actions[InputKey.Jump].performed -= Jumping;
-            _actions[InputKey.Jump].canceled -= Jumping;
+            _actions[InputManagerKey.Jump].performed -= Jumping;
+            _actions[InputManagerKey.Jump].canceled -= Jumping;
             
-            _actions[InputKey.Aim].performed -= Aiming;
-            _actions[InputKey.Aim].canceled -= Aiming;
+            _actions[InputManagerKey.Aim].performed -= Aiming;
+            _actions[InputManagerKey.Aim].canceled -= Aiming;
             
-            _actions[InputKey.Light].performed -= Lighting;
+            _actions[InputManagerKey.Light].performed -= Lighting;
             
-            _actions[InputKey.Fire].performed -= Firing;
+            _actions[InputManagerKey.Fire].performed -= Firing;
         }
         #endregion
         
@@ -127,7 +124,7 @@ namespace GameDevLib.Managers
         {
             if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
             
-            _isJumping = _actions[InputKey.Jump].triggered;
+            _isJumping = _actions[InputManagerKey.Jump].triggered;
             Notify();
         }
         
@@ -155,9 +152,13 @@ namespace GameDevLib.Managers
 
         private void Firing(InputAction.CallbackContext context)
         {
-            if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
+            if (context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled))
+            {
+                _isFiring = null;
+                return;
+            }
             
-            _isFiring = _actions[InputKey.Fire].triggered;
+            _isFiring = _actions[InputManagerKey.Fire].triggered;
             Notify();
         }
 
