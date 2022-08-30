@@ -30,5 +30,11 @@ namespace GameDevLib.Stats
         [field: Header("Optional equipment")]
         [field: SerializeField, Tooltip("Weapon is equipped with a flashlight")]
         public bool IsHaveFlashlight { get; set; }
+        [field: SerializeField, Range(3f,10f)]
+        public float FlashlightIntensity { get; set; }
+        [field: SerializeField, Range(10f,30f)]
+        public float FlashlightRange { get; set; }
+        [field: SerializeField, Range(30f,50f)]
+        public float FlashlightAngle { get; set; }
     }
 }

@@ -79,7 +79,6 @@ namespace GameDevLib.Managers
             _actions[InputKey.Aim].canceled += Aiming;
             
             _actions[InputKey.Light].performed += Lighting;
-            _actions[InputKey.Light].canceled += Lighting;
         }
         
         private void OnDisable()
@@ -97,7 +96,6 @@ namespace GameDevLib.Managers
             _actions[InputKey.Aim].canceled -= Aiming;
             
             _actions[InputKey.Light].performed -= Lighting;
-            _actions[InputKey.Light].canceled -= Lighting;
         }
         #endregion
         
@@ -144,7 +142,7 @@ namespace GameDevLib.Managers
                 _isLighting = null;
                 return;
             }
-            _isLighting = context.performed;
+            _isLighting = context.action.triggered;
             Notify();
         }
 

@@ -21,10 +21,7 @@ namespace GameDevLib.Weapon
         
         [SerializeField] 
         private Light flashLight;
-        
-        [SerializeField, Range(1.0f,5.0f)] 
-        private float flashLightIntensity;
-        
+
         [SerializeField] 
         public CharacterType targetCharacterType;
         #endregion
@@ -37,12 +34,19 @@ namespace GameDevLib.Weapon
 
         private void Awake()
         {
-            if (stats.IsHaveFlashlight && flashLight == null)
+            if (stats.IsHaveFlashlight)
             {
-                Debug.LogError("This weapon must be equipped with a flashlight!");
+                if (flashLight == null)
+                {
+                    Debug.LogError("This weapon must be equipped with a flashlight!");
+                }
+
+                flashLight.intensity = stats.FlashlightIntensity;
+                flashLight.range = stats.FlashlightRange;
+                flashLight.spotAngle = stats.FlashlightAngle;
+                
+                flashLight.enabled = false;
             }
-            flashLight.intensity = flashLightIntensity;
-            flashLight.enabled = false;
         }
         
         private void OnEnable()
@@ -62,7 +66,7 @@ namespace GameDevLib.Weapon
         {
             if (args.Lighting != null && stats.IsHaveFlashlight)
             {
-                flashLight.enabled = args.Lighting.Value;
+                flashLight.enabled = !flashLight.enabled;
             }
         }
         #endregion

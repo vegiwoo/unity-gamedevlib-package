@@ -1,3 +1,4 @@
+using System;
 using GameDevLib.Helpers;
 using GameDevLib.Stats;
 using UnityEngine;
@@ -21,6 +22,12 @@ namespace GameDevLib.Characters
         #endregion
 
         #region MonoBehaviour methods
+
+        protected void Start()
+        {
+            CurrentHp = Stats.MaxHp;
+        }
+
         protected void Update()
         {
             if (CurrentHp <= 0)

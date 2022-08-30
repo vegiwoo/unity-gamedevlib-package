@@ -22,7 +22,6 @@ namespace GameDevLib.Characters
         private Vector3 _playerVelocity;
         private bool _groundedPlayer;
 
-        private float _currentHp;
         private float _currentSpeed;
 
         [CanBeNull] private InputManagerArgs _args;
@@ -34,11 +33,6 @@ namespace GameDevLib.Characters
             _mainCamera = Camera.main;
             _character = GetComponentInParent<Character>();
             _characterController = GetComponent<CharacterController>();
-        }
-
-        private void Start()
-        {
-            _currentHp = _character.Stats.MaxHp;
         }
 
         private void Update()
