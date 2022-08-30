@@ -50,7 +50,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!135 &9166820114420129640
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6485eb959a62c4415a520928258adf2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionEffect: {fileID: 0}
+  collisionEffect: {fileID: 198167755942232882, guid: a30cd0ba5c00c6d459196515ec56574a, type: 3}
 --- !u!1 &1144148927733647159
 GameObject:
   m_ObjectHideFlags: 0

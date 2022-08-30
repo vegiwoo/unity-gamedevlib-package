@@ -86,6 +86,8 @@ namespace GameDevLib.Managers
         
         private void OnDisable()
         {
+            if(_actions == null || _actions.Count == 0) return;
+            
             _actions[InputKey.Move].performed -= Moving;
             _actions[InputKey.Move].canceled -= Moving;
             

@@ -171,7 +171,6 @@ namespace GameDevLib.Weapon
             while (_shotDelayTimer > 0)
             {
                 _shotDelayTimer -= Time.deltaTime;
-
                 yield return null;
             }
 

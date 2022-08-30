@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using GameDevLib.Args;
 using GameDevLib.Characters;
 using UnityEngine;
@@ -11,15 +13,24 @@ namespace GameDevLib.Ammunition
     public class Bullet : Ammunition
     {
         #region Constants, variables and properties
-
         private BulletArgs _bulletArgs;
+        private Light _pointLight;
         #endregion
         
         #region Monobehavior methods
 
+        protected override void Start()
+        {
+            base.Start();
+ 
+            _pointLight = gameObject.AddComponent<Light>();
+            _pointLight.type = LightType.Point;
+            _pointLight.color = Color.yellow;
+            _pointLight.intensity = 10;
+        }
+
         private void FixedUpdate()
         {
-            //if(_bulletArgs == null) return;
             if (Vector3.Distance(_bulletArgs.PointOfShoot.position, transform.position) > _bulletArgs.Range)
             {
                 Destroy(gameObject);
@@ -31,18 +42,14 @@ namespace GameDevLib.Ammunition
 
         private void OnCollisionEnter(Collision collision)
         {
+
             if (collision.gameObject.TryGetComponent<Character>(out var character) &&
                 character.gameObject.CompareTag(_bulletArgs.TargetTag))
             {
                 character.OnHit(_bulletArgs.Damage);
             }
 
-            if (collisionEffect != null)
-            {
-                collisionEffect.Play();
-            }
-            
-            Destroy(gameObject);
+            StartCoroutine(OnCollisionCoroutine());
         }
 
         #endregion
@@ -55,6 +62,16 @@ namespace GameDevLib.Ammunition
         {
             _bulletArgs = bulletArgs;
         }
+
+        private IEnumerator OnCollisionCoroutine()
+        {
+            collisionEffect.Play();
+            yield return new WaitWhile(() => collisionEffect.isPlaying);
+            yield return new WaitForSeconds(0.05f);
+            Destroy(gameObject);
+        }
+        
+        
         #endregion
     }
 }

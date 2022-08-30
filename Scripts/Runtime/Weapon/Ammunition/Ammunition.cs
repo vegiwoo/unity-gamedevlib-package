@@ -17,7 +17,7 @@ namespace GameDevLib.Ammunition
         
         #region MonoBehaviour methods
 
-        protected void Start()
+        protected virtual void Start()
         {
             AmmunitionRigidbody = GetComponent<Rigidbody>();
             if (collisionEffect != null)

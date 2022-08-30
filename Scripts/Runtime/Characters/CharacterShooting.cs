@@ -56,6 +56,8 @@ namespace GameDevLib.Characters
 
         private void OnDrawGizmos()
         {
+            if(_mainCamera == null) return;
+             
             var point01 = _mainCamera.transform.position;
             var point02 = _aimPoint;
             
