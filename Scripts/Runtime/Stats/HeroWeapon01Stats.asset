@@ -19,6 +19,6 @@ MonoBehaviour:
   <TiltAngleInDeg>k__BackingField: 0
   <DamagePerShot>k__BackingField: 10
   <IsHaveFlashlight>k__BackingField: 1
-  <FlashlightIntensity>k__BackingField: 7
+  <FlashlightIntensity>k__BackingField: 30
   <FlashlightRange>k__BackingField: 12
   <FlashlightAngle>k__BackingField: 40
