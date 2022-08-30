@@ -173,7 +173,7 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 2800000, guid: da11d097e0ab5440e96d86ed268a9979, type: 3}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
@@ -469,5 +469,4 @@ MonoBehaviour:
   <ShotPoint>k__BackingField: {fileID: 8163253970721136846}
   inputEvent: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
   flashLight: {fileID: 6431261051121788527}
-  flashLightIntensity: 3
   targetCharacterType: 0
