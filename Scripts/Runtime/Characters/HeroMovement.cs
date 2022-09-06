@@ -1,5 +1,6 @@
 using GameDevLib.Args;
 using GameDevLib.Audio;
+using GameDevLib.Enums;
 using GameDevLib.Events;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -89,8 +90,6 @@ namespace GameDevLib.Characters
         private void OnMovement()
         {
             if (_args == null || _args.Moving == null) return;
-
-            Debug.Log(_args.Moving);
             
             var stats = _character.Stats;
             
@@ -100,7 +99,7 @@ namespace GameDevLib.Characters
             float targetSpeed = default;
             if (_args.Moving != Vector2.zero)
             {
-                targetSpeed = _args.Running != null && _args.Running.Value ? stats.MoveSpeed : stats.MoveSpeed * _character.Stats.AccelerationFactor;
+                targetSpeed = _args.Running != null && _args.Running.Value ? stats.MoveSpeed * _character.Stats.AccelerationFactor : stats.MoveSpeed;
             }
             
             // a reference to the players current horizontal velocity
@@ -219,7 +218,11 @@ namespace GameDevLib.Characters
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
             _args = args;
-            print("YEP!");
+        }
+
+        private void OnFootstep()
+        { 
+            _audioIsPlaying.PlaySound(SoundType.RandomFromArray);
         }
     }
 }

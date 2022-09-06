@@ -57,9 +57,45 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1f6de1e6-9a7a-4851-87da-6c21414f5406
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1974dd4c-2680-42c6-b31f-c6029a78f4f2
+    m_ActionName: Player/Sprint[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 239b05e7-262c-447f-8d1a-bb5ceeb3b8ce
+    m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7ab66290-9641-44c2-8b55-e96a40f01c33
+    m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f828bb38-79f8-4c3e-80f1-d956216b687e
+    m_ActionName: Player/Aim[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: decdd6b1-d3f7-4d7d-adfe-8c07a6005070
+    m_ActionName: Player/Fire[/Mouse/leftButton,/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ba94feca-a788-4ce5-a24c-289056f7f0b8
+    m_ActionName: Player/Fling[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5cb60012-4d47-4221-8b8d-dded2c1a9924
+    m_ActionName: Player/Using[/Keyboard/u]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9e63eb3a-98d4-4af3-92b6-b3e798b43fb6
+    m_ActionName: Player/Light[/Keyboard/l]
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Keyboard / Mouse
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

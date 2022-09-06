@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b13a5d81008894f92a840bd09cd6af5e
+guid: fd14591b0ac7f43d88cd6f5e92d3781b
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,4 +11,4 @@ ScriptedImporter:
   generateWrapperCode: 0
   wrapperCodePath: 
   wrapperClassName: 
-  wrapperCodeNamespace: GameDevLib
+  wrapperCodeNamespace: 

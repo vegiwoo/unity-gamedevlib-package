@@ -1,3 +1,4 @@
+using System;
 using GameDevLib.Args;
 using GameDevLib.Enums;
 using GameDevLib.Events;
@@ -8,7 +9,7 @@ using UnityEngine.InputSystem;
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Managers
 {
-    [RequireComponent(typeof(PlayerInput), typeof(InputManagerEvent))]
+    [RequireComponent(typeof(PlayerInput))]
     public class InputManager : MonoBehaviour
     {
         #region Links
@@ -34,7 +35,7 @@ namespace GameDevLib.Managers
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
-
+            
             _actions[InputManagerKey.Move] = _playerInput.actions[InputManagerKey.Move.ToString()];
             _actions[InputManagerKey.Sprint] = _playerInput.actions[InputManagerKey.Sprint.ToString()];
             _actions[InputManagerKey.Look] = _playerInput.actions[InputManagerKey.Look.ToString()];
@@ -94,6 +95,7 @@ namespace GameDevLib.Managers
             _actions[InputManagerKey.Fire].performed -= Firing;
             _actions[InputManagerKey.Fire].canceled -= Firing;
         }
+
         #endregion
         
         #region Functionality
@@ -102,9 +104,6 @@ namespace GameDevLib.Managers
             if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
             
             _movingDestination = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
-            
-            Debug.Log(_movingDestination);
-            
             Notify();
         }
 
@@ -169,7 +168,6 @@ namespace GameDevLib.Managers
         {
             var args = new InputManagerArgs( _isLighting, _isFiring, _movingDestination, _isRunning, _isJumping, _isAiming);
             inputManagerEvent.Notify(args);
-            print("Event!");
         }
         #endregion
     }
