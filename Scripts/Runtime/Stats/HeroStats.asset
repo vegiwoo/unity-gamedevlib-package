@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   <MaxHp>k__BackingField: 120
-  <MoveSpeed>k__BackingField: 2
-  <AccelerationFactor>k__BackingField: 2.6
+  <MoveSpeed>k__BackingField: 2.5
+  <AccelerationFactor>k__BackingField: 2.3
   <SpeedChangeRate>k__BackingField: 10
   <BaseRotationSpeed>k__BackingField: 4
+  <RotationSmoothTime>k__BackingField: 0.12
   <JumpHeight>k__BackingField: 1.2
   <Gravity>k__BackingField: -15
   <JumpTimeout>k__BackingField: 0.5

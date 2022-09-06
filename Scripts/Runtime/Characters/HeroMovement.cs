@@ -57,6 +57,7 @@ namespace GameDevLib.Characters
             _character = GetComponent<Character>();
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponent<Animator>();
+            _audioIsPlaying = GetComponent<AudioIsPlaying>();
         }
 
         private void Start()
@@ -221,7 +222,7 @@ namespace GameDevLib.Characters
         }
 
         private void OnFootstep()
-        { 
+        {
             _audioIsPlaying.PlaySound(SoundType.RandomFromArray);
         }
     }

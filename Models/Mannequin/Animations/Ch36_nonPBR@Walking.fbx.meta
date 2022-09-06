@@ -60,15 +60,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.37739396
-        functionName: OnFootstep()
+      - time: 0.2952408
+        functionName: OnFootstep
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: c08e3c24f7768402fa197c4fe3e373a0, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.8857399
-        functionName: OnFootstep()
+      - time: 0.8275207
+        functionName: OnFootstep
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: c08e3c24f7768402fa197c4fe3e373a0, type: 3}
         floatParameter: 0

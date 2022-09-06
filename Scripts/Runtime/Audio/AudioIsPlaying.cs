@@ -37,11 +37,7 @@ namespace GameDevLib.Audio
 
         private List<AudioSource> RandomSourcesToPlay { get; set; } = new ();
         #endregion
-        
-        #region Constants and variables 
-        private Coroutine _audioPlayCoroutine;
-        #endregion
-        
+
         #region Events
         public delegate void AudioTriggerHandler(bool isSoundPlayed);  
         [CanBeNull] 
@@ -103,7 +99,7 @@ namespace GameDevLib.Audio
         /// </summary>
         public void PlaySound(SoundType type)
         {
-            _audioPlayCoroutine = StartCoroutine(PlayCoroutine(type, AudioVolume));
+            StartCoroutine(PlayCoroutine(type, AudioVolume));
         }
         
         /// <summary>
@@ -117,14 +113,16 @@ namespace GameDevLib.Audio
         private IEnumerator PlayCoroutine(SoundType type,  float volume)
         {
             var pinch =  Random.Range(0.55f, 1.0f);
-            AudioSource sourceToPlay = null;
             
             switch (type)
             {
                 case SoundType.Negative:
                     if (NegativeSourceToPlay != null)
                     {
-                        sourceToPlay = NegativeSourceToPlay;
+                        PositiveSourceToPlay.volume = volume; 
+                        PositiveSourceToPlay.pitch = pinch; 
+                        NegativeSourceToPlay.Play();
+                        yield return new WaitWhile(() => NegativeSourceToPlay.isPlaying);
                     }
                     else
                     {
@@ -135,7 +133,10 @@ namespace GameDevLib.Audio
                 case SoundType.Positive:
                     if (PositiveSourceToPlay != null)
                     {
-                        sourceToPlay = PositiveSourceToPlay;
+                        PositiveSourceToPlay.volume = volume; 
+                        PositiveSourceToPlay.pitch = pinch; 
+                        PositiveSourceToPlay.Play();
+                        yield return new WaitWhile(() => PositiveSourceToPlay.isPlaying);
                     }
                     else
                     {
@@ -146,7 +147,10 @@ namespace GameDevLib.Audio
                     if (RandomSourcesToPlay.Count > 0)
                     {
                         var index = Random.Range(0, RandomSourcesToPlay.Count - 1);
-                        sourceToPlay = RandomSourcesToPlay[index];
+                        var sourceToPlay = RandomSourcesToPlay[index];
+                        sourceToPlay.volume = volume;
+                        sourceToPlay.Play();
+                        yield return new WaitWhile(() => sourceToPlay.isPlaying);
                     }
                     else
                     {
@@ -154,19 +158,9 @@ namespace GameDevLib.Audio
                     }
                     break;
             }
-            
-            if (sourceToPlay == null) yield break; 
-            
-            sourceToPlay.volume = volume; 
-            sourceToPlay.pitch = pinch; 
-            sourceToPlay.Play();
 
-            yield return new WaitWhile(() => sourceToPlay.isPlaying);
-            
             // Invoke event
             AudioTriggerNotify?.Invoke(true);
-
-            _audioPlayCoroutine = null;
         }
         #endregion
     }
