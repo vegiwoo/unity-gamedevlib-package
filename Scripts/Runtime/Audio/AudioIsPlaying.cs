@@ -1,6 +1,7 @@
 using System;
 using GameDevLib.Enums;
 using System.Collections;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,6 +12,10 @@ namespace GameDevLib.Audio
     /// <summary>
     /// Represents ability to play audio.
     /// </summary>
+    /// <remarks>
+    /// 1. NegativeClipToPlay and PositiveClipToPlay are treated as primary sources, while AudioClips array is treated as a secondary source of audio clips.
+    /// 2. At end of each play, an 'AudioTriggerNotify' event of type 'AudioTriggerHandler' is posted to which you can subscribe. 
+    /// </remarks>>
     public class AudioIsPlaying : MonoBehaviour
     {
         #region Links
@@ -19,11 +24,18 @@ namespace GameDevLib.Audio
         
         [field: SerializeField] 
         private AudioClip PositiveClipToPlay { get; set; }
+        
+        [field: SerializeField] 
+        public AudioClip[] AudioClipsToPlay { get; set; }
         #endregion
         
         #region Properties
+        [field: SerializeField, Range(0, 1)] 
+        public float AudioVolume { get; set; } = 0.5f;
         private AudioSource NegativeSourceToPlay { get; set; }
         private AudioSource PositiveSourceToPlay { get; set; }
+
+        private List<AudioSource> RandomSourcesToPlay { get; set; } = new ();
         #endregion
         
         #region Constants and variables 
@@ -53,6 +65,17 @@ namespace GameDevLib.Audio
                 MakeAudio(PositiveClipToPlay, ref sourceToPlay);
                 PositiveSourceToPlay = sourceToPlay;
             }
+
+            if (AudioClipsToPlay.Length > 0)
+            {
+                for (var index = 0; index < AudioClipsToPlay.Length; index++)
+                {
+                    var sourceToPlay = gameObject.AddComponent<AudioSource>();
+                    var clip = AudioClipsToPlay[index];
+                    MakeAudio(clip, ref sourceToPlay);
+                    RandomSourcesToPlay.Add(sourceToPlay);
+                }
+            }
         }
 
         #endregion
@@ -78,9 +101,9 @@ namespace GameDevLib.Audio
         /// <summary>
         /// Starts audio playback.
         /// </summary>
-        public void PlaySound(SoundType type, float volume = 1.0f)
+        public void PlaySound(SoundType type)
         {
-            _audioPlayCoroutine = StartCoroutine(PlayCoroutine(type, volume));
+            _audioPlayCoroutine = StartCoroutine(PlayCoroutine(type, AudioVolume));
         }
         
         /// <summary>
@@ -94,29 +117,56 @@ namespace GameDevLib.Audio
         private IEnumerator PlayCoroutine(SoundType type,  float volume)
         {
             var pinch =  Random.Range(0.55f, 1.0f);
+            AudioSource sourceToPlay = null;
             
             switch (type)
             {
                 case SoundType.Negative:
                     if (NegativeSourceToPlay != null)
                     {
-                        NegativeSourceToPlay.volume = volume;
-                        NegativeSourceToPlay.pitch = pinch;
-                        NegativeSourceToPlay.Play();
-                        yield return new WaitWhile (()=> NegativeSourceToPlay.isPlaying);
+                        sourceToPlay = NegativeSourceToPlay;
                     }
+                    else
+                    {
+                        yield break;
+                    }
+
                     break;
                 case SoundType.Positive:
                     if (PositiveSourceToPlay != null)
                     {
-                        PositiveSourceToPlay.volume = volume;
-                        PositiveSourceToPlay.pitch = pinch;
-                        PositiveSourceToPlay.Play();
-                        yield return new WaitWhile (()=> PositiveSourceToPlay.isPlaying);
+                        sourceToPlay = PositiveSourceToPlay;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                    break;
+                case SoundType.RandomFromArray:
+                    if (RandomSourcesToPlay.Count > 0)
+                    {
+                        var index = Random.Range(0, RandomSourcesToPlay.Count - 1);
+                        sourceToPlay = RandomSourcesToPlay[index];
+                    }
+                    else
+                    {
+                        yield break;
                     }
                     break;
             }
+            
+            if (sourceToPlay == null) yield break; 
+            
+            sourceToPlay.volume = volume; 
+            sourceToPlay.pitch = pinch; 
+            sourceToPlay.Play();
+
+            yield return new WaitWhile(() => sourceToPlay.isPlaying);
+            
+            // Invoke event
             AudioTriggerNotify?.Invoke(true);
+
+            _audioPlayCoroutine = null;
         }
         #endregion
     }

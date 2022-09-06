@@ -13,6 +13,10 @@ namespace GameDevLib.Enums
         /// <summary>
         /// Sound is played on success or a neutral situation.
         /// </summary>
-        Positive
+        Positive,
+        /// <summary>
+        /// Random sound from presented array of clips.
+        /// </summary>
+        RandomFromArray
     } 
 }

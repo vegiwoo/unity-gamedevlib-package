@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8989a5d0987c947bfac8ee3fba2e9126, type: 3}
   m_Name: HeroStats
   m_EditorClassIdentifier: 
+  type: 0
   <MaxHp>k__BackingField: 120
-  <BaseMovingSpeed>k__BackingField: 4
+  <MoveSpeed>k__BackingField: 2
+  <AccelerationFactor>k__BackingField: 2.6
+  <SpeedChangeRate>k__BackingField: 10
   <BaseRotationSpeed>k__BackingField: 4
-  <AccelerationFactor>k__BackingField: 5
-  <JumpHeight>k__BackingField: 0.75
+  <JumpHeight>k__BackingField: 1.2
+  <Gravity>k__BackingField: -15
+  <JumpTimeout>k__BackingField: 0.5
+  <Grounded>k__BackingField: 1
+  <GroundedOffset>k__BackingField: -0.14
+  <GroundedRadius>k__BackingField: 0.28
+  <GroundLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0

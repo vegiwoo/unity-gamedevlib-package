@@ -1,4 +1,3 @@
-using System;
 using GameDevLib.Args;
 using GameDevLib.Enums;
 using GameDevLib.Events;
@@ -9,28 +8,19 @@ using UnityEngine.InputSystem;
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Managers
 {
-    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(PlayerInput), typeof(InputManagerEvent))]
     public class InputManager : MonoBehaviour
     {
         #region Links
-        [SerializeField] private InputManagerEvent inputManagerEvent;
+        [SerializeField] 
+        private InputManagerEvent inputManagerEvent;
         private PlayerInput _playerInput;
         #endregion
 
         #region Constants and variables
-        
-        private readonly Dictionary<InputManagerKey, InputAction> _actions = new ();
-        
-        private InputAction _moveAction;
-        private InputAction _runAction;
-        private InputAction _lookAction;
-        private InputAction _jumpAction;
-        private InputAction _aimAction;
-        private InputAction _lightAction;
-        private InputAction _fireAction;
-        private InputAction _flingAction;
-        private InputAction _usingAction;
-        
+
+        private readonly Dictionary<InputManagerKey, InputAction> _actions = new();
+
         private Vector2 _movingDestination;
         private bool _isRunning;
         private bool _isJumping;
@@ -46,7 +36,7 @@ namespace GameDevLib.Managers
             _playerInput = GetComponent<PlayerInput>();
 
             _actions[InputManagerKey.Move] = _playerInput.actions[InputManagerKey.Move.ToString()];
-            _actions[InputManagerKey.Run] = _playerInput.actions[InputManagerKey.Run.ToString()];
+            _actions[InputManagerKey.Sprint] = _playerInput.actions[InputManagerKey.Sprint.ToString()];
             _actions[InputManagerKey.Look] = _playerInput.actions[InputManagerKey.Look.ToString()];
             _actions[InputManagerKey.Jump] = _playerInput.actions[InputManagerKey.Jump.ToString()];
             _actions[InputManagerKey.Aim] = _playerInput.actions[InputManagerKey.Aim.ToString()];
@@ -68,8 +58,8 @@ namespace GameDevLib.Managers
             _actions[InputManagerKey.Move].performed += Moving;
             _actions[InputManagerKey.Move].canceled += Moving;
             
-            _actions[InputManagerKey.Run].performed += Running;
-            _actions[InputManagerKey.Run].canceled += Running;
+            _actions[InputManagerKey.Sprint].performed += Running;
+            _actions[InputManagerKey.Sprint].canceled += Running;
 
             _actions[InputManagerKey.Jump].performed += Jumping;
             _actions[InputManagerKey.Jump].canceled += Jumping;
@@ -90,8 +80,8 @@ namespace GameDevLib.Managers
             _actions[InputManagerKey.Move].performed -= Moving;
             _actions[InputManagerKey.Move].canceled -= Moving;
             
-            _actions[InputManagerKey.Run].performed -= Running;
-            _actions[InputManagerKey.Run].canceled -= Running;
+            _actions[InputManagerKey.Sprint].performed -= Running;
+            _actions[InputManagerKey.Sprint].canceled -= Running;
 
             _actions[InputManagerKey.Jump].performed -= Jumping;
             _actions[InputManagerKey.Jump].canceled -= Jumping;
@@ -112,6 +102,9 @@ namespace GameDevLib.Managers
             if(context.phase is not (InputActionPhase.Performed or InputActionPhase.Canceled)) return;
             
             _movingDestination = context.performed ? context.ReadValue<Vector2>() : Vector2.zero;
+            
+            Debug.Log(_movingDestination);
+            
             Notify();
         }
 
@@ -176,6 +169,7 @@ namespace GameDevLib.Managers
         {
             var args = new InputManagerArgs( _isLighting, _isFiring, _movingDestination, _isRunning, _isJumping, _isAiming);
             inputManagerEvent.Notify(args);
+            print("Event!");
         }
         #endregion
     }
