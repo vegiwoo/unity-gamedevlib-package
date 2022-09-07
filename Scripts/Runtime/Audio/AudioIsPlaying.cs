@@ -99,6 +99,11 @@ namespace GameDevLib.Audio
         /// </summary>
         public void PlaySound(SoundType type)
         {
+            if (type == SoundType.Positive)
+            {
+                StopAllCoroutines();
+            }
+            
             StartCoroutine(PlayCoroutine(type, AudioVolume));
         }
         

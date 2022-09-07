@@ -78,6 +78,7 @@ namespace GameDevLib.Characters
         {
             GroundedCheck();
             OnMovement();
+            JumpAndGravity();
         }
 
         private void OnEnable()
@@ -174,11 +175,72 @@ namespace GameDevLib.Characters
             _animator.SetFloat(_animIDSpeed, _animationBlend);
             _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
         }
-        
-        private void ChaRotation()
+
+        private void JumpAndGravity()
         {
+            if(_args == null || _args.Jumping == null) return;
             
+            var stats = _character.Stats;
+
+            if (isGrounded)
+            {
+                // reset the fall timeout timer
+                _fallTimeoutDelta = stats.FallTimeout;
+
+                // update animator
+                _animator.SetBool(_animIDJump, false);
+                _animator.SetBool(_animIDFreeFall, false);
+                
+                // stop our velocity dropping infinitely when grounded
+                if (_verticalVelocity < 0.0f)
+                {
+                    _verticalVelocity = -2f;
+                }
+
+                // Jump
+                if (_args.Jumping.Value && _jumpTimeoutDelta <= 0.0f)
+                {
+                    // the square root of H * -2 * G = how much velocity needed to reach desired height
+                    _verticalVelocity = Mathf.Sqrt( stats.JumpHeight * -2f * stats.Gravity);
+
+                    // update animator
+                    _animator.SetBool(_animIDJump, true);
+                }
+
+                // jump timeout
+                if (_jumpTimeoutDelta >= 0.0f)
+                {
+                    _jumpTimeoutDelta -= Time.deltaTime;
+                }
+            }
+            else
+            {
+                // reset the jump timeout timer
+                _jumpTimeoutDelta = stats.JumpTimeout;
+
+                // fall timeout
+                if (_fallTimeoutDelta >= 0.0f)
+                {
+                    _fallTimeoutDelta -= Time.deltaTime;
+                }
+                else
+                {
+                    // update animator if using character
+                    _animator.SetBool(_animIDFreeFall, true);
+                    
+                }
+
+                // if we are not grounded, do not jump
+                _args.Jumping = false;
+            }
+
+            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+            if (_verticalVelocity < TerminalVelocity)
+            {
+                _verticalVelocity += stats.Gravity * Time.deltaTime;
+            }
         }
+
         
         //
         // private void OnMovement()
@@ -245,6 +307,14 @@ namespace GameDevLib.Characters
         private void OnFootstep()
         {
             _audioIsPlaying.PlaySound(SoundType.RandomFromArray);
+        }
+        
+        /// <summary>
+        /// Triggered when the character hits the ground, triggered by animation clip events.
+        /// </summary>
+        private void OnLand()
+        {
+            _audioIsPlaying.PlaySound(SoundType.Positive);
         }
     }
 }
