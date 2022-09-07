@@ -45,9 +45,6 @@ namespace GameDevLib.Stats
         public float FallTimeout { get; set; } = 0.15f;
 
         [field:Header("Player Grounded")]
-        [field: SerializeField, ReadonlyField, Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-        public bool Grounded { get; set; } = true;
-
         [field: SerializeField, Tooltip("Useful for rough ground")] 
         public float GroundedOffset { get; set; }= -0.14f;
 

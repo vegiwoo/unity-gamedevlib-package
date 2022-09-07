@@ -22,9 +22,8 @@ MonoBehaviour:
   <JumpHeight>k__BackingField: 1.2
   <Gravity>k__BackingField: -15
   <JumpTimeout>k__BackingField: 0.5
-  <Grounded>k__BackingField: 1
   <GroundedOffset>k__BackingField: -0.14
   <GroundedRadius>k__BackingField: 0.28
   <GroundLayers>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64

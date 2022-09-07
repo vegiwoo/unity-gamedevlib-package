@@ -1,7 +1,9 @@
+using System;
 using GameDevLib.Args;
 using GameDevLib.Audio;
 using GameDevLib.Enums;
 using GameDevLib.Events;
+using GameDevLib.Helpers;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -36,6 +38,9 @@ namespace GameDevLib.Characters
         private float _verticalVelocity;
         private const float TerminalVelocity = 53.0f;
         
+        [field: SerializeField, ReadonlyField]
+        private bool isGrounded = true;
+
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
@@ -71,6 +76,7 @@ namespace GameDevLib.Characters
 
         private void Update()
         {
+            GroundedCheck();
             OnMovement();
         }
 
@@ -83,11 +89,22 @@ namespace GameDevLib.Characters
         {
             inputManagerEvent.Detach(this);
         }
-
         #endregion
 
         #region Functionality
 
+        private void GroundedCheck()
+        {
+            var stats = _character.Stats;
+            var position = transform.position;
+            // set sphere position, with offset
+            var spherePosition = new Vector3(position.x, position.y - stats.GroundedOffset, position.z);
+            isGrounded = Physics.CheckSphere(spherePosition, stats.GroundedRadius, stats.GroundLayers,
+                QueryTriggerInteraction.Ignore);
+
+            // update animator 
+            _animator.SetBool(_animIDGrounded, isGrounded);
+        }
         private void OnMovement()
         {
             if (_args == null || _args.Moving == null) return;
@@ -135,7 +152,7 @@ namespace GameDevLib.Characters
 
             // normalise input direction
             var inputDirection = new Vector3(_args.Moving.Value.x, 0.0f, _args.Moving.Value.y).normalized;
-
+            
             // if there is a move input rotate player when the player is moving
             if (_args.Moving.Value != Vector2.zero)
             {
@@ -156,6 +173,11 @@ namespace GameDevLib.Characters
             // update animator
             _animator.SetFloat(_animIDSpeed, _animationBlend);
             _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+        }
+        
+        private void ChaRotation()
+        {
+            
         }
         
         //
@@ -200,10 +222,6 @@ namespace GameDevLib.Characters
         //     var rotation = Quaternion.Euler(0, _mainCamera.transform.eulerAngles.y, 0);
         //     transform.rotation = Quaternion.Lerp(transform.rotation, rotation, _character.Stats.BaseRotationSpeed * Time.deltaTime);
         // }
-        // public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
-        // {
-        //     _args = args;
-        // }
 
         private void AssignAnimationIDs()
         {
@@ -221,6 +239,9 @@ namespace GameDevLib.Characters
             _args = args;
         }
 
+        /// <summary>
+        /// Triggered when a character steps on ground, triggered via animation clip events.
+        /// </summary>
         private void OnFootstep()
         {
             _audioIsPlaying.PlaySound(SoundType.RandomFromArray);
