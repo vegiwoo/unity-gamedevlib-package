@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4026932075823580613}
   - component: {fileID: 2206842452396605818}
   - component: {fileID: 4026932075823580614}
+  - component: {fileID: 5747546734867910143}
   - component: {fileID: 4026932075823580615}
   - component: {fileID: 1203183011033557897}
   - component: {fileID: 564301335002769130}
@@ -67,6 +68,23 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5747546734867910143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026932075823580664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8befda12d7a11459bb550016a7c0c00a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ikActive: 1
+  <TargetForLeftHand>k__BackingField: {fileID: 0}
+  <TargetForRightHand>k__BackingField: {fileID: 0}
+  <HandContactDistance>k__BackingField: 0.5
+  <TargetForHead>k__BackingField: {fileID: 0}
 --- !u!143 &4026932075823580615
 CharacterController:
   m_ObjectHideFlags: 0
@@ -113,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManagerEvent: {fileID: 11400000, guid: df719e141584742bd843c6f082fa82a6, type: 2}
+  isGrounded: 1
 --- !u!114 &1788061734342420315
 MonoBehaviour:
   m_ObjectHideFlags: 0
