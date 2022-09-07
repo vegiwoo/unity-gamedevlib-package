@@ -2,12 +2,13 @@ using System;
 using GameDevLib.Args;
 using GameDevLib.Enums;
 using GameDevLib.Events;
+using GameDevLib.Interfaces;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Characters
 {
-    public class CharacterShooting : MonoBehaviour, IObserver<InputManagerArgs>
+    public class CharacterShooting : MonoBehaviour, Interfaces.IObserver<InputManagerArgs>
     {
         #region Links
         [field: SerializeField, Tooltip("Layer taken into account when aiming")]

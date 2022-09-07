@@ -1,12 +1,12 @@
-using System;
 using UnityEngine;
 using Cinemachine;
 using GameDevLib.Args;
 using GameDevLib.Events;
+using GameDevLib.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Cameras {
-    public class ThirdPersonCameraGroup : MonoBehaviour, IObserver<InputManagerArgs>
+    public class ThirdPersonCameraGroup : MonoBehaviour, Interfaces.IObserver<InputManagerArgs>
     {
         #region Links 
         [Header("Cameras")]

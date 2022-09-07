@@ -4,6 +4,7 @@ using GameDevLib.Args;
 using GameDevLib.Audio;
 using GameDevLib.Enums;
 using GameDevLib.Events;
+using GameDevLib.Interfaces;
 using GameDevLib.Stats;
 
 // ReSharper disable once CheckNamespace

@@ -34,7 +34,7 @@ namespace GameDevLib.Stats
         [field: SerializeField, Range(0.5f, 2.0f)]
         public float JumpHeight { get; set; } = 1.2f;
 
-        [field: SerializeField, ReadonlyField, Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
+        [field: SerializeField, Tooltip("The character uses its own gravity value. The engine default is -9.81f"), Range(-10, -20)]
         public float Gravity { get; set; }  = -15.0f;
 
         [field:SerializeField, Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]

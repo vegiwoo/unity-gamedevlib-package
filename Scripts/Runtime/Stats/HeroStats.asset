@@ -20,7 +20,7 @@ MonoBehaviour:
   <BaseRotationSpeed>k__BackingField: 4
   <RotationSmoothTime>k__BackingField: 0.12
   <JumpHeight>k__BackingField: 1.2
-  <Gravity>k__BackingField: -15
+  <Gravity>k__BackingField: -12
   <JumpTimeout>k__BackingField: 0.5
   <GroundedOffset>k__BackingField: -0.14
   <GroundedRadius>k__BackingField: 0.28

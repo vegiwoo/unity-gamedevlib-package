@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameDevLib.Args;
+using GameDevLib.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Events

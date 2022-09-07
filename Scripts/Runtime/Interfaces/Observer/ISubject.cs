@@ -1,5 +1,5 @@
 // ReSharper disable once CheckNamespace
-namespace GameDevLib
+namespace GameDevLib.Interfaces
 {
     /// <summary>
     /// Publisher interface.

@@ -4,6 +4,7 @@ using GameDevLib.Audio;
 using GameDevLib.Enums;
 using GameDevLib.Events;
 using GameDevLib.Helpers;
+using GameDevLib.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ using UnityEngine;
 namespace GameDevLib.Characters
 {
     [RequireComponent(typeof(CharacterController), typeof(Animator), typeof(AudioIsPlaying))]
-    public class HeroMovement : MonoBehaviour, IObserver<InputManagerArgs>
+    public class HeroMovement : MonoBehaviour, Interfaces.IObserver<InputManagerArgs>, IAnimatorParametersWorkable
     {
         #region Links
 
@@ -194,7 +195,7 @@ namespace GameDevLib.Characters
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
                 {
-                    _verticalVelocity = -2f;
+                    _verticalVelocity = -2.0f;
                 }
 
                 // Jump
@@ -241,7 +242,7 @@ namespace GameDevLib.Characters
             }
         }
         
-        private void AssignAnimationIDs()
+        public void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
