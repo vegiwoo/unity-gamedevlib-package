@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Cinemachine;
 using GameDevLib.Args;
@@ -18,8 +19,11 @@ namespace GameDevLib.Cameras {
         [SerializeField] private InputManagerEvent inputManagerEvent;
         [Header("Others")]
         [SerializeField] private int priorityBoostAmount = 10;
+        [SerializeField] private bool isShowAims;
         [SerializeField] private Canvas vCamNormalCanvas;
         [SerializeField] private Canvas vCamAimCanvas;
+
+        private InputManagerArgs _args;
         #endregion
         
         #region Constants and variables
@@ -42,15 +46,15 @@ namespace GameDevLib.Cameras {
             vCamNormal.m_LookAt = cameraFollowing;
             vCamNormal.Priority = VCamNormalPriority;
             vCamNormal.m_Lens.FieldOfView = VCamFOV;
-
+            
             // vCamAim
             vCamAim.m_Follow = cameraFollowing;
             vCamAim.m_LookAt = cameraFollowing;
             vCamAim.Priority = VCamAimPriority;
             vCamAim.m_Lens.FieldOfView = VCamFOV;
-            
-            vCamNormalCanvas.enabled = true;
-            vCamAimCanvas.enabled = false;
+
+            // Hiding aims
+            SettingDisplayCrosshairs();
         }
 
         private void OnEnable()
@@ -62,30 +66,49 @@ namespace GameDevLib.Cameras {
         {
             inputManagerEvent.Detach(this);
         }
+        
+        private void Update()
+        {
+            SettingDisplayCrosshairs();
+        }
+
         #endregion
         
         #region Functionality
+
+        private void SettingDisplayCrosshairs()
+        {
+            if (!isShowAims)
+            {
+                vCamNormalCanvas.enabled = vCamAimCanvas.enabled = false;
+                vCamNormal.Priority = VCamNormalPriority;
+                vCamAim.Priority = VCamAimPriority;
+            }
+            else
+            {
+                if(_args == null) return;
+                
+                switch (_args.Aiming)
+                {
+                    case true:
+                        vCamAim.Priority = VCamAimPriority + priorityBoostAmount;
+                        vCamNormalCanvas.enabled = false;
+                        vCamAimCanvas.enabled = true;
+                        break;
+                    case false:
+                        vCamAim.Priority = VCamAimPriority;
+                        vCamAimCanvas.enabled = false;
+                        vCamNormalCanvas.enabled = true;
+                        break;
+                }
+            }
+        }
+        
+        
         public void OnEventRaised(ISubject<InputManagerArgs> subject, InputManagerArgs args)
         {
-            if(args.Aiming == null) return;
-
-            switch (args.Aiming)
-            {
-                case true:
-                    vCamAim.Priority += priorityBoostAmount;
-                    vCamNormalCanvas.enabled = false;
-                    vCamAimCanvas.enabled = true;
-                    break;
-                case false:
-                    vCamAim.Priority -= priorityBoostAmount;
-                    vCamAimCanvas.enabled = false;
-                    vCamNormalCanvas.enabled = true;
-                    break;
-            }
+            _args = args;
         }
         #endregion
     }
 }
-
-
-
