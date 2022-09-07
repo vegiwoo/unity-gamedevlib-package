@@ -1,4 +1,3 @@
-using System;
 using GameDevLib.Args;
 using GameDevLib.Audio;
 using GameDevLib.Enums;
@@ -15,14 +14,12 @@ namespace GameDevLib.Characters
     public class HeroMovement : MonoBehaviour, Interfaces.IObserver<InputManagerArgs>, IAnimatorParametersWorkable
     {
         #region Links
-
         [Header("Input")] 
         [SerializeField] private InputManagerEvent inputManagerEvent;
 
         private Character _character;
         private Camera _mainCamera;
         private CharacterController _characterController;
-        private Animator _animator;
         private AudioIsPlaying _audioIsPlaying;
         #endregion
 
@@ -32,7 +29,6 @@ namespace GameDevLib.Characters
         [CanBeNull] private InputManagerArgs _args;
 
         // player 
-        private float _speed;
         private float _animationBlend;
         private float _targetRotation;
         private float _rotationVelocity;
@@ -62,7 +58,6 @@ namespace GameDevLib.Characters
             _mainCamera = Camera.main;
             _character = GetComponent<Character>();
             _characterController = GetComponent<CharacterController>();
-            _animator = GetComponent<Animator>();
             _audioIsPlaying = GetComponent<AudioIsPlaying>();
         }
 
@@ -105,7 +100,7 @@ namespace GameDevLib.Characters
                 QueryTriggerInteraction.Ignore);
 
             // update animator 
-            _animator.SetBool(_animIDGrounded, isGrounded);
+            _character.Animator.SetBool(_animIDGrounded, isGrounded);
         }
         private void OnMovement()
         {
@@ -126,8 +121,8 @@ namespace GameDevLib.Characters
             var velocity = _characterController.velocity;
             var currentHorizontalSpeed = new Vector3(velocity.x, 0.0f, velocity.z).magnitude;
             
-            var speedOffset = 0.1f;
-            var inputMagnitude = 1f;
+            const float speedOffset = 0.1f;
+            const float inputMagnitude = 1f;
             
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
@@ -135,15 +130,15 @@ namespace GameDevLib.Characters
             {
                 // creates curved result rather than a linear one giving a more organic speed change
                     // note T in Lerp is clamped, so we don't need to clamp our speed
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+                _character.CurrentSpeed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
                     Time.deltaTime * stats.SpeedChangeRate);
                 
                 // round speed to 3 decimal places
-                _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                _character.CurrentSpeed = Mathf.Round(_character.CurrentSpeed * 1000f) / 1000f;
             }
             else
             {
-                _speed = targetSpeed;
+                _character.CurrentSpeed = targetSpeed;
             }
             
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * stats.SpeedChangeRate);
@@ -169,12 +164,12 @@ namespace GameDevLib.Characters
             
             // update moving
             var targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-            _characterController.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+            _characterController.Move(targetDirection.normalized * (_character.CurrentSpeed * Time.deltaTime) +
                                       new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
             
             // update animator
-            _animator.SetFloat(_animIDSpeed, _animationBlend);
-            _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+            _character.Animator.SetFloat(_animIDSpeed, _animationBlend);
+            _character.Animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
         }
 
         private void JumpAndGravity()
@@ -189,8 +184,8 @@ namespace GameDevLib.Characters
                 _fallTimeoutDelta = stats.FallTimeout;
 
                 // update animator
-                _animator.SetBool(_animIDJump, false);
-                _animator.SetBool(_animIDFreeFall, false);
+                _character.Animator.SetBool(_animIDJump, false);
+                _character.Animator.SetBool(_animIDFreeFall, false);
                 
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
@@ -205,7 +200,7 @@ namespace GameDevLib.Characters
                     _verticalVelocity = Mathf.Sqrt( stats.JumpHeight * -2f * stats.Gravity);
 
                     // update animator
-                    _animator.SetBool(_animIDJump, true);
+                    _character.Animator.SetBool(_animIDJump, true);
                 }
 
                 // jump timeout
@@ -227,7 +222,7 @@ namespace GameDevLib.Characters
                 else
                 {
                     // update animator if using character
-                    _animator.SetBool(_animIDFreeFall, true);
+                    _character.Animator.SetBool(_animIDFreeFall, true);
                     
                 }
 

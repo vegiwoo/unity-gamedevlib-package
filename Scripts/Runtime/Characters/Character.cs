@@ -1,4 +1,3 @@
-using System;
 using GameDevLib.Helpers;
 using GameDevLib.Stats;
 using UnityEngine;
@@ -9,23 +8,32 @@ namespace GameDevLib.Characters
     /// <summary>
     /// Essence of playable or non-playable character.
     /// </summary>
+    [RequireComponent(typeof(Animator))]
     public abstract class Character : MonoBehaviour
     {
         #region Links
         [field:Header("Stats")] 
         [field:SerializeField] 
         public CharacterStats Stats { get; private set; }
-        [field: SerializeField, ReadonlyField, Tooltip("Current hit points.")]
+        [field: SerializeField, ReadonlyField]
         public float CurrentHp { get; protected set; }
-        [field: SerializeField, ReadonlyField, Tooltip("Character's current movement speed")]
-        protected float CurrentSpeed { get;  set; }
+        [field: SerializeField, ReadonlyField]
+        public float CurrentSpeed { get; set; }
+        
+        public Animator Animator { get; private set; }
         #endregion
 
         #region MonoBehaviour methods
 
+        protected void Awake()
+        {
+            Animator = GetComponent<Animator>();
+        }
+        
         protected void Start()
         {
             CurrentHp = Stats.MaxHp;
+            CurrentSpeed = Stats.MoveSpeed;
         }
 
         protected void Update()

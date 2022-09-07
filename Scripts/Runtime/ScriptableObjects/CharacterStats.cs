@@ -9,9 +9,15 @@ namespace GameDevLib.Stats
     public class CharacterStats : ScriptableObject
     {
         #region Properties
-        [field: SerializeField] public CharacterType type;
+        [field: SerializeField] 
+        public CharacterType characterType;
 
-        [field: SerializeField] public float MaxHp { get; set; }
+        [field: Header("Common")]
+        [field: SerializeField] 
+        public float MaxHp { get; set; }
+        
+        [field:SerializeField, Tooltip("Character attention radius in meters"), Range(1, 30)]
+        public float AttentionRadius { get; set; }
 
         [field: Header("Movement")]
         [field: SerializeField, Range(1f, 5f)]
@@ -24,11 +30,10 @@ namespace GameDevLib.Stats
         public float SpeedChangeRate { get; set; } = 10.0f;
 
         [field: SerializeField, Range(1.0f, 5.0f)]
-        public float BaseRotationSpeed { get; set; }
+        public float BaseRotationSpeed { get; set; } = 4.0f;
 
-        [field: SerializeField, Tooltip("How fast the character turns to face movement direction"), Range(0.0f, 0.3f)]
+        [field: SerializeField, Tooltip("How fast the character turns to face movement direction. "), Range(0.0f, 0.3f)]
         public float RotationSmoothTime { get; set; } = 0.12f;
-
 
         [field: Space(10)] 
         [field: SerializeField, Range(0.5f, 2.0f)]
@@ -53,6 +58,25 @@ namespace GameDevLib.Stats
 
         [field: SerializeField, Tooltip("What layers the character uses as ground")]
         public LayerMask GroundLayers { get; set; }
+        
+        [field:Header("For other characters")]
+        [field: SerializeField, ReadonlyField]
+        public float RotationAngleDelta { get; set; } = 7;
+
+        [field: SerializeField, ReadonlyField] 
+        public float MovingDistanceDelta { get; set; } = 0.02f;
+
+        [field: SerializeField, Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
+        public float StopDistanceForWaypoints { get; set; } = 0.35f;
+
+        [field: SerializeField, Tooltip("Distance from target at which the character is held when attacking."), Range(3, 10)]
+        public float MinAttackDistance { get; set; } = 5.0f;
+        
+        [field: SerializeField, Tooltip("The distance from the target at which the character holds crosshair when attacking.."), Range(3, 10)]
+        public float MaxAttackDistance { get; set; } = 15.0f;
+
+        [field: SerializeField, Tooltip("Array of tracked types for characters")]
+        public TrackedObjectType[] TrackedObjectTypes { get; set; }
         #endregion
     }
 }
