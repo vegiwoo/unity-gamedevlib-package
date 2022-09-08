@@ -1,13 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-7355776609369538024
+--- !u!1102 &-7225824044409436173
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Movement
+  m_Name: CharacterMovement
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7532007003604939697}
+  m_Motion: {fileID: 3540349474332972280}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -36,7 +36,7 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: -7355776609369538024}
+    m_State: {fileID: -7225824044409436173}
     m_Position: {x: 30, y: 150, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
@@ -47,7 +47,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 80, z: 0}
   m_ExitPosition: {x: 50, y: -40, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -7355776609369538024}
+  m_DefaultState: {fileID: -7225824044409436173}
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -62,19 +62,19 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: velX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: velY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -88,7 +88,7 @@ AnimatorController:
     m_IKPass: 1
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!206 &7532007003604939697
+--- !u!206 &3540349474332972280
 BlendTree:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,7 +99,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -203655887218126122, guid: f504d0f91f09d4a868ec4dbdef5056b1, type: 3}
     m_Threshold: 0
-    m_Position: {x: -0.00000005811453, y: 0.001632236}
+    m_Position: {x: 0, y: -0.00325}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX
@@ -107,7 +107,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -203655887218126122, guid: 8556d266efaed4740ab9baca6c0789cf, type: 3}
     m_Threshold: 0.5
-    m_Position: {x: 0.00000007972121, y: 0.0029025716}
+    m_Position: {x: 2, y: 0.0029025716}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX
@@ -115,7 +115,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -203655887218126122, guid: 7f35694f7b0c445e0b4b4819f03715c2, type: 3}
     m_Threshold: 1
-    m_Position: {x: 0.0000005662441, y: 0.0073442035}
+    m_Position: {x: 7, y: 0.0073442035}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: velX

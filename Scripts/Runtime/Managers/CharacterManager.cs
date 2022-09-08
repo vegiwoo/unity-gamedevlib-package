@@ -90,14 +90,13 @@ namespace GameDevLib.Managers
         /// </summary>
         private IEnumerator RemoveMissingCharacters()
         {
-            //var missingCharacters = new Dictionary<int, int>();
-
-            foreach (var (character, characterMovement) in _characters)
+            foreach (var (character, characterMovement) in _characters.ToList())
             {
-                if(character.CurrentHp > 0) continue;
-                
+                if(character != null && character.CurrentHp > 0) continue;
+
                 _characters.Remove(character);
-                
+                Destroy(character.gameObject);
+
                 var args = new RouteArgs(characterMovement.Route.stats.RouteName, 0, 1);
                 characterManagerEvent.Notify(args);
             }

@@ -20,7 +20,7 @@ namespace GameDevLib.Characters
     /// <remarks>
     /// https://docs.unity3d.com/540/Documentation/Manual/nav-CouplingAnimationAndNavigation.html
     /// </remarks>>
-    [RequireComponent( typeof(Rigidbody),typeof(NavMeshAgent),typeof(Character) )]
+    [RequireComponent( typeof(NavMeshAgent),typeof(Character) )]
     public class CharacterMovement : MonoBehaviour, IAnimatorParametersWorkable
     {
         #region Links
@@ -30,8 +30,8 @@ namespace GameDevLib.Characters
         [field: SerializeField, Tooltip("Current state of enemy"), ReadonlyField] 
         public CharacterState CurrentState { get; private set; }
 
-        private Rigidbody _rb;
         private NavMeshAgent _navMeshAgent;
+        private Animator _animator;
         private Character _character;
         private TrackedTrigger _trackedTrigger;
         private IKControl _ikControl;
@@ -68,17 +68,15 @@ namespace GameDevLib.Characters
         
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _character = GetComponent<Character>();
+            _animator = _character.Animator;
             _trackedTrigger = GetComponentInChildren<TrackedTrigger>();
             _ikControl = GetComponent<IKControl>();
         }
 
         private void Start()
         {
-            _rb.isKinematic = true;
-
             if(_character.Stats.characterType == CharacterType.Enemy)
             {
                 gameObject.tag = Data.EnemyTag;
@@ -98,24 +96,31 @@ namespace GameDevLib.Characters
             currentCountdownValue = 0;
 
             _ikControl.HeadTrackingDistance = _character.Stats.MaxDistance;
+
+            AssignAnimationIDs();
             
-            ToggleEnemyState(CharacterState.Patrol);
+            ToggleCharacterState(CharacterState.Patrol);
         }
 
         private void Update()
         {
-            OnMovement();
-            DirectCharacterToPointOfInterest();
+            if (CurrentState != CharacterState.Died)
+            {
+                OnMovement();
+                DirectCharacterToPointOfInterest();
+            }
         }
 
         private void OnEnable()
         {
             _trackedTrigger.TrackedTriggerNotify += TrackedTriggerHandler;
+            _character.CharacterHandlerNotify += OnCharacterEventHandler;
         }
         
         private void OnDisable()
         {
             _trackedTrigger.TrackedTriggerNotify -= TrackedTriggerHandler;
+            _character.CharacterHandlerNotify -= OnCharacterEventHandler;
         }
 
         private void OnAnimatorMove()
@@ -134,7 +139,7 @@ namespace GameDevLib.Characters
 
         private void OnMovement()
         {
-            var t = transform;
+            var t = gameObject.transform;
             var worldDeltaPosition = _navMeshAgent.nextPosition - t.position;
             var groundDeltaPosition = Vector3.zero;
             groundDeltaPosition.x = Vector3.Dot(t.right, worldDeltaPosition);
@@ -142,10 +147,10 @@ namespace GameDevLib.Characters
             var velocity = (Time.deltaTime > 1e-5f) ? groundDeltaPosition / Time.deltaTime : Vector3.zero;
             var shouldMove = velocity.magnitude > 0.025f && _navMeshAgent.remainingDistance > _navMeshAgent.radius;
             
-            _character.Animator.SetBool(_isWalking, shouldMove);
-            _character.Animator.SetFloat (_velocityX, velocity.x);
-            _character.Animator.SetFloat (_velocityY, velocity.y);
-
+            _animator.SetBool(_isWalking, shouldMove);
+            _animator.SetFloat (_velocityX, velocity.x);
+            _animator.SetFloat (_velocityY, velocity.y);
+            
             if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
             {
                 transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
@@ -156,7 +161,7 @@ namespace GameDevLib.Characters
         /// Changes state of character.
         /// </summary>
         /// <param name="state">New state of character.</param>
-        private void ToggleEnemyState(CharacterState state)
+        private void ToggleCharacterState(CharacterState state)
         {
             CurrentState = state;
 
@@ -170,6 +175,16 @@ namespace GameDevLib.Characters
                 case CharacterState.Attack:
                     //_enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
                     _trackedTrigger.TrackedTriggerNotify -= TrackedTriggerHandler;
+                    break;
+                case CharacterState.Died:
+                    
+                    StopAllCoroutines();
+                    
+                    _pointOfInterest = null;
+                    _character.CurrentSpeed =  _navMeshAgent.speed = 0;
+                    
+                    _trackedTrigger.TrackedTriggerNotify -= TrackedTriggerHandler;
+                    _character.CharacterHandlerNotify -= OnCharacterEventHandler;
                     break;
             }
         }
@@ -185,8 +200,16 @@ namespace GameDevLib.Characters
             {
                 case TrackedObjectType.Hero:
                     _pointOfInterest = args.TrackedObjectTransform;
-                    ToggleEnemyState(CharacterState.Attack);
+                    ToggleCharacterState(CharacterState.Attack);
                     break;
+            }
+        }
+
+        private void OnCharacterEventHandler(CharacterArgs args)
+        {
+            if (args.DiedByTimer)
+            {
+               ToggleCharacterState(CharacterState.Died);
             }
         }
 
@@ -215,50 +238,48 @@ namespace GameDevLib.Characters
 
             _ikControl.TargetForHead = _pointOfInterest;
         }
-        
+
         private IEnumerator CharacterPatrolCoroutine()
         {
             while (true)
             {
-                if (Route != null)
-                {
-                    var currentWaypoint = Route[RoutePositionType.Current, _currentWaypointIndex];
+                if (Route == null) continue;
 
-                    if (_character.CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
-                    {
-                        _navMeshAgent.destination = currentWaypoint;
-                    }
-                
-                    var stopDistance = _navMeshAgent.stoppingDistance;
-               
-                    // Change waypoint
-                    if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
-                        Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
-                    {
-                        var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
-                   
-                        // Waiting if point is checkpoint
-                        if (result.isControlPoint)
-                        {
-                            yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased, Route.stats.WaitTime));
-                        }
-                   
-                        _isMovingForward = result.isMoveForward;
-                        _currentWaypointIndex = result.index;
-                    }
-               
-                    if (CurrentState == CharacterState.Patrol)
-                    {
-                        yield return null;
-                    }
-                    else
-                    {
-                        _characterPatrolCoroutine = null;
-                        yield break;
-                    }
+                var currentWaypoint = Route[RoutePositionType.Current, _currentWaypointIndex];
+
+                if (_character.CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
+                {
+                    _navMeshAgent.destination = currentWaypoint;
                 }
 
-                yield return null;
+                var stopDistance = _navMeshAgent.stoppingDistance;
+
+                // Change waypoint
+                if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
+                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
+                {
+                    var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
+
+                    // Waiting if point is checkpoint
+                    if (result.isControlPoint)
+                    {
+                        yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased,
+                            Route.stats.WaitTime));
+                    }
+
+                    _isMovingForward = result.isMoveForward;
+                    _currentWaypointIndex = result.index;
+                }
+
+                if (CurrentState == CharacterState.Patrol)
+                {
+                    yield return null;
+                }
+                else
+                {
+                    _characterPatrolCoroutine = null;
+                    yield break;
+                }
             }
         }
         
@@ -285,7 +306,7 @@ namespace GameDevLib.Characters
                     _navMeshAgent.ResetPath();
                     yield return new WaitForSeconds(Route.stats.WaitTime);
                     
-                    ToggleEnemyState(CharacterState.Patrol);
+                    ToggleCharacterState(CharacterState.Patrol);
                     //_characterAttackCoroutine = null;
                     yield break;
                 }

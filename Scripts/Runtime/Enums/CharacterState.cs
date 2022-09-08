@@ -3,6 +3,6 @@ namespace GameDevLib.Enums
 {
     public enum CharacterState
     {
-        Patrol, Attack
+        Patrol, Attack, Died
     }
 }
