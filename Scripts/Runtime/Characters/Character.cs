@@ -28,6 +28,9 @@ namespace GameDevLib.Characters
         
         public float CurrentSpeed { get; set; }
 
+        [field: SerializeField, Tooltip("What layers the character uses as ground")]
+        public LayerMask[] GroundLayers { get; set; }
+        
         [field: Header("Kill by timer")]
         [field: SerializeField] 
         public bool IsDeathByTimer { get; set; } = false;

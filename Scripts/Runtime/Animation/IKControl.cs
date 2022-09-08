@@ -1,5 +1,4 @@
-using System;
-using Cinemachine.Utility;
+using GameDevLib.Characters;
 using GameDevLib.Helpers;
 using GameDevLib.Interfaces;
 using UnityEngine;
@@ -26,9 +25,6 @@ namespace GameDevLib.Animations
         [field: SerializeField, Tooltip("in meters")] 
         private float HandContactDistance { get; set; } = 0.5f;
 
-        [field: SerializeField] 
-        private LayerMask[] LayersOfFootPlacement { get; set; }
-        
         [field: Space(4)]
         [field: SerializeField]
         public Transform TargetForHead { get; set; }
@@ -36,6 +32,7 @@ namespace GameDevLib.Animations
         public float HeadTrackingDistance  { get; set; } = 2.0f;
         
         private Animator _animator;
+        private Character _character;
         private int _leftFootWalking;
         private int _rightFootWalking;
 
@@ -166,7 +163,7 @@ namespace GameDevLib.Animations
             }
 
             // Raycast from foot to ground, given the target location layer
-            foreach (var layer in LayersOfFootPlacement)
+            foreach (var layer in _character.GroundLayers)
             {
                 if (!Physics.Raycast(position + Vector3.up, Vector3.down, out var hit, distance, layer)) continue;
                 

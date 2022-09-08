@@ -96,9 +96,13 @@ namespace GameDevLib.Characters
             var position = transform.position;
             // set sphere position, with offset
             var spherePosition = new Vector3(position.x, position.y - stats.GroundedOffset, position.z);
-            isGrounded = Physics.CheckSphere(spherePosition, stats.GroundedRadius, stats.GroundLayers,
-                QueryTriggerInteraction.Ignore);
 
+            foreach (var layer in _character.GroundLayers)
+            {
+                isGrounded = Physics.CheckSphere(spherePosition, stats.GroundedRadius, layer,
+                    QueryTriggerInteraction.Ignore);
+            }
+            
             // update animator 
             _character.Animator.SetBool(_animIDGrounded, isGrounded);
         }

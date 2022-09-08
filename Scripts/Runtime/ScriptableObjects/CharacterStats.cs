@@ -15,9 +15,6 @@ namespace GameDevLib.Stats
         [field: Header("Common")]
         [field: SerializeField] 
         public float MaxHp { get; set; }
-        
-        //[field:SerializeField, Tooltip("Character attention radius in meters"), Range(1, 30)]
-        //public float AttentionRadius { get; set; }
 
         [field: Header("Movement")]
         [field: SerializeField, Range(1f, 5f)]
@@ -56,9 +53,6 @@ namespace GameDevLib.Stats
         [field: SerializeField, Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
         public float GroundedRadius { get; set; } = 0.28f;
 
-        [field: SerializeField, Tooltip("What layers the character uses as ground")]
-        public LayerMask GroundLayers { get; set; }
-        
         [field:Header("For other characters")]
         [field: SerializeField, ReadonlyField]
         public float RotationAngleDelta { get; set; } = 7;
