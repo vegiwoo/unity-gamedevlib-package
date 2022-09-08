@@ -1,25 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GameDevLib.Args;
 using GameDevLib.Enums;
+using GameDevLib.Events;
+using GameDevLib.Interfaces;
 using GameDevLib.Stats;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Routes
 {
-    public class CharacterRoute : MonoBehaviour
+    public class CharacterRoute : MonoBehaviour, Interfaces.IObserver<RouteArgs>
     {
         #region Links
-        [SerializeField] private RouteStats stats;
-        [SerializeField] private WayPoint[] wayPoints;
+        [SerializeField] public RouteStats stats;
+        [SerializeField] private WayPoint[] wayPoints; 
+        private CharacterManagerEvent _characterManagerEvent;
         #endregion
         
         #region Constants and variables
         private const int RouteStartIndex = 0;
         private int RouteEndIndex => wayPoints.Length - 1;
-        //public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].point.position;
-        private float _spawnTimer = 0;
+        public Vector3 FirstWaypoint => wayPoints[RouteStartIndex].point.position;
+        public float SpawnTimer { get; private set; } = 0;
+
         private Coroutine _countdownToSpawnNewEnemyCoroutine;
         #endregion
         
@@ -47,7 +54,34 @@ namespace GameDevLib.Routes
         }
         #endregion
         
+        #region MonoBehaviour methods
+
+        private void OnEnable()
+        {
+            if (_characterManagerEvent != null)
+            {
+                _characterManagerEvent.Attach(this);
+            }
+        }
+        
+        private void OnDisable()
+        {
+            if (_characterManagerEvent != null)
+            {
+                _characterManagerEvent.Detach(this);
+            }
+        }
+
+        #endregion
+        
         #region Functionality
+
+        public void Init(CharacterManagerEvent characterManagerEvent)
+        {
+            _characterManagerEvent = characterManagerEvent;
+            _characterManagerEvent.Attach(this);
+        }
+        
         /// <summary>
         /// Change destination waypoint and direction of moving.
         /// </summary>
@@ -70,28 +104,7 @@ namespace GameDevLib.Routes
                     : (true, oldIndex + step, isCurrentControlPoint, isAttentionIsIncreased)
             };
         }
-        
-        /// <summary>
-        /// Called when characters appear on route.
-        /// </summary>
-        /// <param name="item">A tuple of route number and number of spawned characters.</param>
-        public void OnAppearanceCharacterEvent((int routeNumber, int createCount) item)
-        {
-            if (item.routeNumber != stats.RouteNumber) return;
-            _countdownToSpawnNewEnemyCoroutine = StartCoroutine(CountdownToSpawnNewEnemyCoroutine());
-        }
-        
-        /// <summary>
-        /// Called when characters disappear on route.
-        /// </summary>
-        /// <param name="missing">A dictionary of route numbers and number of missing characters on each of them.</param>
-        public void OnDisappearanceCharacterEvent(Dictionary<int, int> missing)
-        {
-            var killedOnCurrentRoute = missing.Select(el => el.Key == stats.RouteNumber).First();
-            if (!killedOnCurrentRoute) return;
-            _countdownToSpawnNewEnemyCoroutine = StartCoroutine(CountdownToSpawnNewEnemyCoroutine());
-        }
-        
+
         /// <summary>
         /// Called after appearance or disappearance of a character from route.
         /// </summary>
@@ -100,13 +113,23 @@ namespace GameDevLib.Routes
         {
             var minValue = stats.MinSpawnTimeout;
             var maxValue = stats.MinSpawnTimeout * 3;
-            _spawnTimer = Random.Range(minValue, maxValue);
+            SpawnTimer = Random.Range(minValue, maxValue);
             
-            yield return new WaitForSeconds(_spawnTimer);
+            yield return new WaitForSeconds(SpawnTimer);
 
-            _spawnTimer = 0;
+            SpawnTimer = 0;
             _countdownToSpawnNewEnemyCoroutine = null;
         }
         #endregion
+
+        public void OnEventRaised(ISubject<RouteArgs> subject, RouteArgs args)
+        {
+            if(args.RouteName != stats.RouteName) return;
+            
+            if (args.NumberCharactersCreated > 0 || args.NumberCharactersMissing > 0)
+            {
+                _countdownToSpawnNewEnemyCoroutine = StartCoroutine(CountdownToSpawnNewEnemyCoroutine());
+            }
+        }
     }
 }

@@ -31,9 +31,9 @@ namespace GameDevLib.Animations
         
         [field: Space(4)]
         [field: SerializeField]
-        private Transform TargetForHead { get; set; }
+        public Transform TargetForHead { get; set; }
         [field: SerializeField, Tooltip("in meters")]
-        private float HeadTrackingDistance  { get; set; } = 2.0f;
+        public float HeadTrackingDistance  { get; set; } = 2.0f;
         
         private Animator _animator;
         private int _leftFootWalking;

@@ -11,7 +11,7 @@ namespace GameDevLib.Interactions
     {
         #region Links
         
-        [field:SerializeField, ReadonlyField]
+        [field:SerializeField]
         public TrackedObjectType[] TrackedObjectTypes { get; private set;}
         
         #endregion
@@ -107,7 +107,6 @@ namespace GameDevLib.Interactions
         }
         
         #endregion
- 
     }
 }
 

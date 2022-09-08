@@ -16,12 +16,12 @@ namespace GameDevLib.Events
 
         public void Attach(IObserver<InputManagerArgs> observer)
         {
-            _observers.Add(observer);
+            if (!_observers.Contains(observer))  _observers.Add(observer);
         }
 
         public void Detach(IObserver<InputManagerArgs> observer)
         {
-            _observers.Remove(observer);
+            if (_observers.Contains(observer))  _observers.Remove(observer);
         }
 
         public void Notify(InputManagerArgs args)

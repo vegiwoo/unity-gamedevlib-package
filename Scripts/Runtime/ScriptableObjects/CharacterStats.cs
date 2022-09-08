@@ -16,8 +16,8 @@ namespace GameDevLib.Stats
         [field: SerializeField] 
         public float MaxHp { get; set; }
         
-        [field:SerializeField, Tooltip("Character attention radius in meters"), Range(1, 30)]
-        public float AttentionRadius { get; set; }
+        //[field:SerializeField, Tooltip("Character attention radius in meters"), Range(1, 30)]
+        //public float AttentionRadius { get; set; }
 
         [field: Header("Movement")]
         [field: SerializeField, Range(1f, 5f)]
@@ -69,11 +69,11 @@ namespace GameDevLib.Stats
         [field: SerializeField, Tooltip("Contact distance with waypoint."), Range(0.1f, 1.0f)]
         public float StopDistanceForWaypoints { get; set; } = 0.35f;
 
-        [field: SerializeField, Tooltip("Distance from target at which the character is held when attacking."), Range(3, 10)]
-        public float MinAttackDistance { get; set; } = 5.0f;
+        [field: SerializeField, Tooltip("Minimum distance to point of interest."), Range(3, 10)]
+        public float MinDistance { get; set; } = 5.0f;
         
-        [field: SerializeField, Tooltip("The distance from the target at which the character holds crosshair when attacking.."), Range(3, 10)]
-        public float MaxAttackDistance { get; set; } = 15.0f;
+        [field: SerializeField, Tooltip("Maximum distance to point of interest."), Range(3, 10)]
+        public float MaxDistance { get; set; } = 15.0f;
 
         [field: SerializeField, Tooltip("Array of tracked types for characters")]
         public TrackedObjectType[] TrackedObjectTypes { get; set; }

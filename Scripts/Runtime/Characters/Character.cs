@@ -1,3 +1,4 @@
+using GameDevLib.Animations;
 using GameDevLib.Helpers;
 using GameDevLib.Stats;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace GameDevLib.Characters
     /// <summary>
     /// Essence of playable or non-playable character.
     /// </summary>
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator), typeof(IKControl))]
     public abstract class Character : MonoBehaviour
     {
         #region Links
@@ -21,6 +22,7 @@ namespace GameDevLib.Characters
         public float CurrentSpeed { get; set; }
         
         public Animator Animator { get; private set; }
+        public IKControl IKControl { get; private set; }
         #endregion
 
         #region MonoBehaviour methods
@@ -28,6 +30,7 @@ namespace GameDevLib.Characters
         protected void Awake()
         {
             Animator = GetComponent<Animator>();
+            IKControl = GetComponent<IKControl>();
         }
         
         protected void Start()
@@ -46,12 +49,16 @@ namespace GameDevLib.Characters
         #endregion
         
         #region Functionality
+
         /// <summary>
         /// Character Damage Method.
         /// </summary>
         /// <param name="damage">Damage value.</param>
         /// <returns></returns>
-        public abstract void OnHit(float damage);
+        public virtual void OnHit(float damage)
+        {
+            CurrentHp -= damage;
+        }
         #endregion
     }
 }
