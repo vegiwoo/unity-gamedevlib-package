@@ -9,10 +9,10 @@ namespace GameDevLib.Animations
     /// <summary>
     /// Monitors inverse kinematics states.
     /// </summary>
-    [RequireComponent(typeof(Animator))]
     public class IKControl : MonoBehaviour, IAnimatorParametersWorkable
     {
         #region Links
+        
         [field: Header("Common")] 
         [field: SerializeField]
         private bool ikActive;
@@ -31,7 +31,6 @@ namespace GameDevLib.Animations
         [field: SerializeField, Tooltip("in meters")]
         public float HeadTrackingDistance  { get; set; } = 2.0f;
         
-        private Animator _animator;
         private Character _character;
         private int _leftFootWalking;
         private int _rightFootWalking;
@@ -39,6 +38,7 @@ namespace GameDevLib.Animations
         #endregion
         
         #region Constants and variables
+        
         private const int MaxWeight = 1;
         private const int MinWeight = 0;
         
@@ -50,28 +50,31 @@ namespace GameDevLib.Animations
         private float RightFootCurrentWeight { get; set; }
 
         // Raycast hit foot positions
-        private Vector3 LeftFootPosition, RightFootPosition; 
+        private Vector3 _leftFootPosition, _rightFootPosition; 
         
         // Foot transforms 
-        private Transform LeftFootTransform, RightFootTransform;
+        public Transform _leftFootTransform, _rightFootTransform;
         
         // Difference of model and controllers
-        public Vector3 LeftFootOffset, RightFootOffset;
-        
+        public Vector3 leftFootOffset, rightFootOffset;
         
         #endregion
         
         #region MonoBehaviour methods
+
+        private void Awake()
+        {
+            _character = GetComponent<Character>();
+        }
+
         private void Start()
         {
-            _animator = GetComponent<Animator>();
-            
             AssignAnimationIDs();
         }
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (!_animator || !ikActive) return;
+            if (!_character.Animator || !ikActive) return;
 
             // Setting look target for head
             if (TargetForHead != null)
@@ -79,12 +82,12 @@ namespace GameDevLib.Animations
                 var isTurnHead = Vector3.Distance(transform.position, TargetForHead.position) < HeadTrackingDistance;
                 if (isTurnHead)
                 {
-                    _animator.SetLookAtWeight(MaxWeight);
-                    _animator.SetLookAtPosition(TargetForHead.position);
+                    _character.Animator.SetLookAtWeight(MaxWeight);
+                    _character.Animator.SetLookAtPosition(TargetForHead.position);
                 }
                 else
                 {
-                    _animator.SetLookAtWeight(MinWeight);
+                    _character.Animator.SetLookAtWeight(MinWeight);
                 }
             }
             
@@ -108,8 +111,8 @@ namespace GameDevLib.Animations
             
             // Foots 
             // Get weights
-            LeftFootCurrentWeight = _animator.GetFloat(_leftFootWalking);
-            RightFootCurrentWeight = _animator.GetFloat(_rightFootWalking);
+            LeftFootCurrentWeight = _character.Animator.GetFloat(_leftFootWalking);
+            RightFootCurrentWeight = _character.Animator.GetFloat(_rightFootWalking);
             
             // Set weights for IK controllers
             SetIKWeightPositionRotation(AvatarIKGoal.LeftFoot, LeftFootCurrentWeight);
@@ -122,6 +125,7 @@ namespace GameDevLib.Animations
         #endregion
         
         #region Functionality
+        
         /// <summary>
         /// Sets weight, position and rotation of AvatarIKGoal target.
         /// </summary>
@@ -133,33 +137,35 @@ namespace GameDevLib.Animations
         {
             if (weight != null)
             {
-                _animator.SetIKPositionWeight(goal, weight.Value);
-                _animator.SetIKRotationWeight(goal, weight.Value);
+                _character.Animator.SetIKPositionWeight(goal, weight.Value);
+                _character.Animator.SetIKRotationWeight(goal, weight.Value);
             }
 
             if (position != null)
             {
-                _animator.SetIKPosition(goal, position.Value);
+                _character.Animator.SetIKPosition(goal, position.Value);
             }
             
             if (rotation != null)
             {
-                _animator.SetIKRotation(goal, rotation.Value);
+                _character.Animator.SetIKRotation(goal, rotation.Value);
             }
         }
 
         private void IKRaycasting(AvatarIKGoal goal)
         {
+            if(_character.GroundLayers == null || _character.GroundLayers.Length == 0) return;
+            
             const float distance = 2.0f;
-            var position = _animator.GetIKPosition(goal);
+            var position = _character.Animator.GetIKPosition(goal);
             
             if (goal == AvatarIKGoal.LeftFoot)
             {
-                LeftFootPosition = position;
+                _leftFootPosition = position;
             }
             else if (goal == AvatarIKGoal.RightFoot)
             {
-                RightFootPosition = position;
+                _rightFootPosition = position;
             }
 
             // Raycast from foot to ground, given the target location layer
@@ -169,25 +175,19 @@ namespace GameDevLib.Animations
                 
                 // Draw construction lines in editor
                 Debug.DrawLine(hit.point, hit.point + hit.normal, Color.yellow);
-                    
-                if (goal == AvatarIKGoal.LeftFoot)
+
+                switch (goal)
                 {
-                    SetIKWeightPositionRotation(
-                        goal, 
-                        null, 
-                        hit.point + LeftFootOffset, 
-                        Quaternion.LookRotation(Vector3.ProjectOnPlane(LeftFootTransform.forward, hit.normal), hit.normal));
-                    
-                    LeftFootPosition = hit.point;
-                }
-                else if (goal == AvatarIKGoal.RightFoot)
-                {
-                    SetIKWeightPositionRotation(
-                        goal, 
-                        null, 
-                        hit.point + RightFootOffset, 
-                        Quaternion.LookRotation(Vector3.ProjectOnPlane(RightFootTransform.forward, hit.normal), hit.normal));
-                    RightFootPosition = hit.point;
+                    case AvatarIKGoal.LeftFoot:
+                        _character.Animator.SetIKPosition(AvatarIKGoal.LeftFoot, hit.point + leftFootOffset);
+                        _character.Animator.SetIKRotation(AvatarIKGoal.LeftFoot,  Quaternion.LookRotation(Vector3.ProjectOnPlane(_leftFootTransform.forward, hit.normal), hit.normal));
+                        _leftFootPosition = hit.point;
+                        break;
+                    case AvatarIKGoal.RightFoot:
+                        _character.Animator.SetIKPosition(AvatarIKGoal.RightFoot, hit.point + rightFootOffset);
+                        _character.Animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(Vector3.ProjectOnPlane(_rightFootTransform.forward, hit.normal), hit.normal));
+                        _rightFootPosition = hit.point;
+                        break;
                 }
             }
         }
@@ -196,6 +196,7 @@ namespace GameDevLib.Animations
             _leftFootWalking = Animator.StringToHash("Left_Leg_Walking");
             _rightFootWalking = Animator.StringToHash("Right_Leg_Walking");
         }
+        
         #endregion
     }
 }

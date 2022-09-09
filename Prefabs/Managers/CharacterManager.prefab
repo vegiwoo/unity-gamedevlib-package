@@ -78,7 +78,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6039331232876604324
 Transform:
   m_ObjectHideFlags: 0
@@ -108,7 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 7031493410592844327, guid: 083d4f16e2bd64428832523119d6ae21, type: 3}
-  routes: []
+  routes:
+  - {fileID: 3572516286443598581}
   characterManagerEvent: {fileID: 11400000, guid: 8f7d91d967e0f42239e4deb04539e0b5, type: 2}
 --- !u!1 &7259134953451512575
 GameObject:

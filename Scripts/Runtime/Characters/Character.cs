@@ -15,17 +15,18 @@ namespace GameDevLib.Characters
     public abstract class Character : MonoBehaviour
     {
         #region Links
+        
         [field: Header("Links")]
         [field: SerializeField, Tooltip("Physical bodies in a ragdoll object")] 
         private Rigidbody[] rigidBodiesForRagdoll;
 
         [field:SerializeField] 
         public CharacterStats Stats { get; private set; }
-        [field: SerializeField, ReadonlyField]
         
+        [field: SerializeField, ReadonlyField]
         public float CurrentHp { get; protected set; }
-        [field: SerializeField, ReadonlyField]
         
+        [field: SerializeField, ReadonlyField]
         public float CurrentSpeed { get; set; }
 
         [field: SerializeField, Tooltip("What layers the character uses as ground")]
@@ -43,7 +44,7 @@ namespace GameDevLib.Characters
         private Coroutine _killOnTimerCoroutine;
 
         public Animator Animator { get; private set; }
-        //public IKControl IKControl { get; private set; }
+
         #endregion
         
         #region Constants and variables 
@@ -57,7 +58,6 @@ namespace GameDevLib.Characters
         protected void Awake()
         {
             Animator = GetComponent<Animator>();
-            //IKControl = GetComponent<IKControl>();
         }
         
         protected void Start()
@@ -75,6 +75,7 @@ namespace GameDevLib.Characters
                 _killOnTimerCoroutine = StartCoroutine(KillOnTimerCoroutine());
             }
         }
+        
         #endregion
         
         #region Functionality
@@ -102,7 +103,6 @@ namespace GameDevLib.Characters
             
             CurrentHp = 0;
             _killOnTimerCoroutine = null;
-           
         }
 
         private void ToggleRagdoll(bool enable)

@@ -96,13 +96,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.778
+  m_Height: 1.6
   m_Radius: 0.18
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.001
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.88, z: 0}
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!114 &1203183011033557897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,9 +115,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c020d36ac67c4372962cb8610bc1007, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigidBodiesForRagdoll: []
   <Stats>k__BackingField: {fileID: 11400000, guid: 02c2722d99fea4e75bb9da4eb3fba588, type: 2}
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
+  <GroundLayers>k__BackingField:
+  - serializedVersion: 2
+    m_Bits: 64
+  <IsDeathByTimer>k__BackingField: 0
+  <DeathTimerValue>k__BackingField: 3
+  <DelayDeathByTimer>k__BackingField: 5
 --- !u!114 &564301335002769130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,13 +181,14 @@ MonoBehaviour:
   <TargetForLeftHand>k__BackingField: {fileID: 0}
   <TargetForRightHand>k__BackingField: {fileID: 0}
   <HandContactDistance>k__BackingField: 0.5
-  <LayersOfFootPlacement>k__BackingField: []
   <TargetForHead>k__BackingField: {fileID: 0}
   <HeadTrackingDistance>k__BackingField: 2
-  LeftFootCurrentWeight: 0
-  RightFootCurrentWeight: 0
-  LeftFootOffset: {x: 0, y: 0, z: 0}
-  RightFootOffset: {x: 0, y: 0, z: 0}
+  <LeftFootCurrentWeight>k__BackingField: 0
+  <RightFootCurrentWeight>k__BackingField: 0
+  _leftFootTransform: {fileID: 8515366062894009060}
+  _rightFootTransform: {fileID: 3748638777153419799}
+  leftFootOffset: {x: 0, y: 0, z: 0}
+  rightFootOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &4026932075917536759
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,5 +313,15 @@ PrefabInstance:
 --- !u!4 &3488090817705610934 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
+  m_PrefabInstance: {fileID: 4026932076377303389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3748638777153419799 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 281297371296666442, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
+  m_PrefabInstance: {fileID: 4026932076377303389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8515366062894009060 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4741763956638393273, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
   m_PrefabInstance: {fileID: 4026932076377303389}
   m_PrefabAsset: {fileID: 0}

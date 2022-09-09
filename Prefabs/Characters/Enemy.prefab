@@ -145,13 +145,12 @@ MonoBehaviour:
   <TargetForLeftHand>k__BackingField: {fileID: 0}
   <TargetForRightHand>k__BackingField: {fileID: 0}
   <HandContactDistance>k__BackingField: 0.5
-  <LayersOfFootPlacement>k__BackingField: []
   <TargetForHead>k__BackingField: {fileID: 0}
   <HeadTrackingDistance>k__BackingField: 2
   <LeftFootCurrentWeight>k__BackingField: 0
   <RightFootCurrentWeight>k__BackingField: 0
-  LeftFootOffset: {x: 0, y: 0, z: 0}
-  RightFootOffset: {x: 0, y: 0, z: 0}
+  leftFootOffset: {x: 0, y: 0, z: 0}
+  rightFootOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7031493410592844327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,8 +178,11 @@ MonoBehaviour:
   <Stats>k__BackingField: {fileID: 11400000, guid: 955597b9cba2744c29a5ccaa6c3818e4, type: 2}
   <CurrentHp>k__BackingField: 0
   <CurrentSpeed>k__BackingField: 0
+  <GroundLayers>k__BackingField:
+  - serializedVersion: 2
+    m_Bits: 64
   <IsDeathByTimer>k__BackingField: 1
-  <DeathTimerValue>k__BackingField: 10
+  <DeathTimerValue>k__BackingField: 13
   <DelayDeathByTimer>k__BackingField: 5
 --- !u!114 &597597882172187642
 MonoBehaviour:
