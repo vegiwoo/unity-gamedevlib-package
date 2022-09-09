@@ -168,9 +168,16 @@ namespace GameDevLib.Characters
             switch (CurrentState)
             {
                 case CharacterState.Patrol:
-                    _pointOfInterest = null;
-                    _characterPatrolCoroutine = StartCoroutine(CharacterPatrolCoroutine());
-                    _trackedTrigger.TrackedTriggerNotify += TrackedTriggerHandler;
+                    if (Route != null)
+                    {
+                        _pointOfInterest = null;
+                        _characterPatrolCoroutine = StartCoroutine(CharacterPatrolCoroutine());
+                        _trackedTrigger.TrackedTriggerNotify += TrackedTriggerHandler;
+                    }
+                    else
+                    {
+                        Debug.LogError("An attempt to move a character without specifying a route!");
+                    }
                     break;
                 case CharacterState.Attack:
                     //_enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
@@ -241,10 +248,8 @@ namespace GameDevLib.Characters
 
         private IEnumerator CharacterPatrolCoroutine()
         {
-            while (true)
+            while (CurrentState == CharacterState.Patrol && _pointOfInterest == null)
             {
-                if (Route == null) continue;
-
                 var currentWaypoint = Route[RoutePositionType.Current, _currentWaypointIndex];
 
                 if (_character.CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
