@@ -20,7 +20,7 @@ namespace GameDevLib.Characters
     /// <remarks>
     /// https://docs.unity3d.com/540/Documentation/Manual/nav-CouplingAnimationAndNavigation.html
     /// </remarks>>
-    [RequireComponent( typeof(NavMeshAgent),typeof(Character) )]
+    [RequireComponent(typeof(Animator),typeof(NavMeshAgent),typeof(Character) )]
     public class CharacterMovement : MonoBehaviour, IAnimatorParametersWorkable
     {
         #region Links
@@ -70,7 +70,7 @@ namespace GameDevLib.Characters
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _character = GetComponent<Character>();
-            _animator = _character.Animator;
+            _animator = GetComponent<Animator>();
             _trackedTrigger = GetComponentInChildren<TrackedTrigger>();
             _ikControl = GetComponent<IKControl>();
         }
