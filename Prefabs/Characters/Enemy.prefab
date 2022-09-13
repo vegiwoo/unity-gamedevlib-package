@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8befda12d7a11459bb550016a7c0c00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ikActive: 0
+  ikActive: 1
   <TargetForLeftHand>k__BackingField: {fileID: 0}
   <TargetForRightHand>k__BackingField: {fileID: 0}
   <HandContactDistance>k__BackingField: 0.5
@@ -149,6 +149,8 @@ MonoBehaviour:
   <HeadTrackingDistance>k__BackingField: 2
   <LeftFootCurrentWeight>k__BackingField: 0
   <RightFootCurrentWeight>k__BackingField: 0
+  _leftFootTransform: {fileID: 4475044892420535642}
+  _rightFootTransform: {fileID: 8949763880065418665}
   leftFootOffset: {x: 0, y: 0, z: 0}
   rightFootOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7031493410592844327
@@ -181,9 +183,9 @@ MonoBehaviour:
   <GroundLayers>k__BackingField:
   - serializedVersion: 2
     m_Bits: 64
-  <IsDeathByTimer>k__BackingField: 1
-  <DeathTimerValue>k__BackingField: 13
-  <DelayDeathByTimer>k__BackingField: 5
+  <IsDeathByTimer>k__BackingField: 0
+  <DeathTimerValue>k__BackingField: 0
+  <DelayDeathByTimer>k__BackingField: 0
 --- !u!114 &597597882172187642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,6 +549,11 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!4 &4475044892420535642 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4741763956638393273, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
+  m_PrefabInstance: {fileID: 9211176995743356643}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4508277492426644776 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4702939792406662091, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
@@ -1230,5 +1237,10 @@ CharacterJoint:
 --- !u!4 &8673393923046322440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
+  m_PrefabInstance: {fileID: 9211176995743356643}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8949763880065418665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 281297371296666442, guid: 85470efa1e132474b923093b7d8e8fbf, type: 3}
   m_PrefabInstance: {fileID: 9211176995743356643}
   m_PrefabAsset: {fileID: 0}

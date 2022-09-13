@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using GameDevLib.Args;
 using GameDevLib.Enums;
 using GameDevLib.Events;
 using GameDevLib.Interfaces;
 using GameDevLib.Stats;
+using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -32,26 +30,27 @@ namespace GameDevLib.Routes
         
         #region Properties
         /// <summary>
-        /// Returns requested route positions.
+        /// Returns requested route transform.
         /// </summary>
         /// <param name="positionType">Requested item type.</param>
         /// <param name="i">Index of position relative to which result is requested.</param>
         /// <remarks>
         /// When receiving positions of type 'First' or 'Last', index is not specified.
         /// </remarks>>
-        public Vector3 this[RoutePositionType positionType, int i]
+        [CanBeNull] public Transform this[RoutePositionType positionType, int i]
         {
             get
             {
                 return positionType switch
                 {
-                    RoutePositionType.Previous => wayPoints[i - 1].point.position,
-                    RoutePositionType.Current => wayPoints[i].point.position,
-                    RoutePositionType.Next => wayPoints[i + 1].point.position,
-                    _ => Vector3.zero
+                    RoutePositionType.Previous => wayPoints[i - 1].point,
+                    RoutePositionType.Current => wayPoints[i].point,
+                    RoutePositionType.Next => wayPoints[i + 1].point,
+                    _ => null
                 };
             }
         }
+        
         #endregion
         
         #region MonoBehaviour methods
@@ -88,21 +87,42 @@ namespace GameDevLib.Routes
         /// <param name="isMovingForward">Current direction of moving.</param>
         /// <param name="oldIndex">Old index of waypoint .</param>
         /// <returns>Calculation result.</returns>
-        public (bool isMoveForward, int index, bool isControlPoint, bool isAttentionIsIncreased) ChangeWaypoint(bool isMovingForward, in int oldIndex)
+        public WaypointArgs ChangeWaypoint(bool isMovingForward, in int oldIndex)
         {
             const int step = 1;
             var isCurrentControlPoint = wayPoints[oldIndex].isCheckPoint;
             var isAttentionIsIncreased = wayPoints[oldIndex].isIncreaseAttention;
-
-            return isMovingForward switch
+            int newIndex;
+            bool isNewMovingForward = default;
+            
+            switch (isMovingForward)
             {
-                true => oldIndex != RouteEndIndex
-                    ? (true, oldIndex + step, isCurrentControlPoint, isAttentionIsIncreased)
-                    : (false, stats.IsLoopedRoute ? RouteStartIndex : oldIndex - step, isCurrentControlPoint, isAttentionIsIncreased),
-                false => oldIndex != RouteStartIndex
-                    ? (false, oldIndex - step, isCurrentControlPoint, isAttentionIsIncreased)
-                    : (true, oldIndex + step, isCurrentControlPoint, isAttentionIsIncreased)
-            };
+                case true:
+                    if (oldIndex != RouteEndIndex)
+                    {
+                        newIndex = oldIndex + step;
+                        isNewMovingForward = true;
+                    }
+                    else
+                    {
+                        newIndex = stats.IsLoopedRoute ? RouteStartIndex : oldIndex - step;
+                    }
+                    break;
+                case false:
+                    if (oldIndex != RouteStartIndex)
+                    {
+                        newIndex = oldIndex - step;
+                    }
+                    else
+                    {
+                        newIndex = oldIndex + step;
+                        isNewMovingForward = true;
+                    }
+                    break;
+            }
+
+            return new WaypointArgs(newIndex, wayPoints[newIndex].point, isNewMovingForward, isCurrentControlPoint,
+                isAttentionIsIncreased);
         }
 
         /// <summary>
@@ -120,7 +140,6 @@ namespace GameDevLib.Routes
             SpawnTimer = 0;
             _countdownToSpawnNewEnemyCoroutine = null;
         }
-        #endregion
 
         public void OnEventRaised(ISubject<RouteArgs> subject, RouteArgs args)
         {
@@ -131,5 +150,6 @@ namespace GameDevLib.Routes
                 _countdownToSpawnNewEnemyCoroutine = StartCoroutine(CountdownToSpawnNewEnemyCoroutine());
             }
         }
+        #endregion
     }
 }

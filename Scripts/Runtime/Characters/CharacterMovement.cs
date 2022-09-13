@@ -254,26 +254,35 @@ namespace GameDevLib.Characters
 
                 if (_character.CurrentHp > 0 && _navMeshAgent.isActiveAndEnabled)
                 {
-                    _navMeshAgent.destination = currentWaypoint;
+                    if (currentWaypoint != null)
+                    {
+                        _navMeshAgent.destination = currentWaypoint.position;
+                    }
                 }
 
                 var stopDistance = _navMeshAgent.stoppingDistance;
 
                 // Change waypoint
-                if (Math.Abs(transform.position.x - currentWaypoint.x) < stopDistance &&
-                    Math.Abs(transform.position.z - currentWaypoint.z) < stopDistance)
+                if (currentWaypoint is not null && 
+                    Math.Abs(transform.position.x - currentWaypoint.position.x) < stopDistance &&
+                    Math.Abs(transform.position.z - currentWaypoint.position.z) < stopDistance)
                 {
                     var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
 
                     // Waiting if point is checkpoint
-                    if (result.isControlPoint)
+                    if (result.IsControlPoint)
                     {
-                        yield return StartCoroutine(WaitingCoroutine(result.isAttentionIsIncreased,
+                        yield return StartCoroutine(WaitingCoroutine(result.IsAttentionIsIncreased,
                             Route.stats.WaitTime));
                     }
+                    
+                    var a = _navMeshAgent.transform.forward.normalized;
+                    var b = result.NewPoint.transform.position.normalized;
+                    var value = Vector3.Dot(a, b);
+                    Console.WriteLine($"{value}");
 
-                    _isMovingForward = result.isMoveForward;
-                    _currentWaypointIndex = result.index;
+                    _isMovingForward = result.IsMoveForward;
+                    _currentWaypointIndex = result.NewCurrentIndex;
                 }
 
                 if (CurrentState == CharacterState.Patrol)
