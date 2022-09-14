@@ -6,7 +6,8 @@
   "dependencies": {
     "com.unity.inputsystem": "1.3.0",
     "com.unity.cinemachine": "2.8.6",
-    "com.unity.probuilder": "5.0.6"
+    "com.unity.probuilder": "5.0.6",
+    "com.unity.animation.rigging": "1.1.1"
   },
   "description": "Package contains commonly used entities and libraries for game development in Unity and C#",
   "author": {
