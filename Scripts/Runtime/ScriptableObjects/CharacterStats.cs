@@ -29,7 +29,7 @@ namespace GameDevLib.Stats
         [field: SerializeField, Range(1.0f, 5.0f)]
         public float BaseRotationSpeed { get; set; } = 4.0f;
 
-        [field: SerializeField, Tooltip("How fast the character turns to face movement direction. "), Range(0.0f, 0.3f)]
+        [field: SerializeField, Tooltip("How fast the character turns to face movement direction. "), Range(0.0f, 5.0f)]
         public float RotationSmoothTime { get; set; } = 0.12f;
 
         [field: Space(10)] 

@@ -87,6 +87,7 @@ namespace GameDevLib.Characters
             _navMeshAgent.speed = _character.CurrentSpeed;
             _navMeshAgent.stoppingDistance = _character.Stats.StopDistanceForWaypoints;
             _navMeshAgent.updatePosition = false;
+            _navMeshAgent.updateRotation = false;
             
             _isMovingForward = true;
             _currentWaypointIndex = 0;
@@ -139,6 +140,7 @@ namespace GameDevLib.Characters
 
         private void OnMovement()
         {
+            // Moving
             var t = gameObject.transform;
             var worldDeltaPosition = _navMeshAgent.nextPosition - t.position;
             var groundDeltaPosition = Vector3.zero;
@@ -150,7 +152,17 @@ namespace GameDevLib.Characters
             _animator.SetBool(_isWalking, shouldMove);
             _animator.SetFloat (_velocityX, velocity.x);
             _animator.SetFloat (_velocityY, velocity.y);
+
+            // Rotate
+            var currentPoint = Route[RoutePositionType.Current, _currentWaypointIndex];
+            if (currentPoint is not null)
+            {
+                var direction = currentPoint.position - transform.position;
+                var lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));  
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _character.Stats.RotationSmoothTime);;
+            }
             
+            // Fix
             if (worldDeltaPosition.magnitude > _navMeshAgent.radius)
             {
                 transform.position = _navMeshAgent.nextPosition - 0.9f * worldDeltaPosition;
@@ -268,18 +280,13 @@ namespace GameDevLib.Characters
                     Math.Abs(transform.position.z - currentWaypoint.position.z) < stopDistance)
                 {
                     var result = Route.ChangeWaypoint(_isMovingForward, _currentWaypointIndex);
-
+                    
                     // Waiting if point is checkpoint
                     if (result.IsControlPoint)
                     {
                         yield return StartCoroutine(WaitingCoroutine(result.IsAttentionIsIncreased,
                             Route.stats.WaitTime));
                     }
-                    
-                    var a = _navMeshAgent.transform.forward.normalized;
-                    var b = result.NewPoint.transform.position.normalized;
-                    var value = Vector3.Dot(a, b);
-                    Console.WriteLine($"{value}");
 
                     _isMovingForward = result.IsMoveForward;
                     _currentWaypointIndex = result.NewCurrentIndex;
@@ -291,6 +298,7 @@ namespace GameDevLib.Characters
                 }
                 else
                 {
+                    Debug.Log("CharacterPatrolCoroutine exit");
                     _characterPatrolCoroutine = null;
                     yield break;
                 }
@@ -360,8 +368,10 @@ namespace GameDevLib.Characters
             currentCountdownValue = 0;
             _navMeshAgent.isStopped = false;
             _navMeshAgent.velocity = savedSpeed;
+
+            yield return null;
         }
-        
+
         public void AssignAnimationIDs()
         {
             _isWalking = Animator.StringToHash("isWalking");
