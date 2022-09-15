@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57a5732d2c9fd49b5bd7caf2c35c5cf3, type: 3}
-  m_Name: HeroWeapon01Stats
+  m_Name: HeroWeapon01StatsExample
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 0
   <BulletPrefab>k__BackingField: {fileID: 4169109616351658530, guid: 67d6e944723e44017b12169e909f9f85, type: 3}
@@ -19,6 +19,6 @@ MonoBehaviour:
   <TiltAngleInDeg>k__BackingField: 0
   <DamagePerShot>k__BackingField: 10
   <IsHaveFlashlight>k__BackingField: 1
-  <FlashlightIntensity>k__BackingField: 30
+  <FlashlightIntensity>k__BackingField: 10
   <FlashlightRange>k__BackingField: 12
   <FlashlightAngle>k__BackingField: 40
