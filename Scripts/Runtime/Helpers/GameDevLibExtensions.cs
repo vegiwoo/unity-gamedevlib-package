@@ -25,13 +25,12 @@ namespace GameDevLib.Helpers
             return Enum.TryParse<T>(value, true, out T result) ? result : defaultValue;
         }
 
-        public static T Random<T>(this Enum value, T defaultValue)
+        public static T RandomValue<T>(this Enum value, T defaultValue)
         {
             var values = Enum.GetValues(typeof(T));
             var random = new Random();
-            
-            return (T)values.GetValue(random.Next(values.Length));
+            var randomValue = (T)values.GetValue(random.Next(values.Length));
+            return randomValue != null ? randomValue : defaultValue;
         }
-
     }
 }
