@@ -29,4 +29,4 @@ MonoBehaviour:
   <StopDistanceForWaypoints>k__BackingField: 0.35
   <MinDistance>k__BackingField: 5
   <MaxDistance>k__BackingField: 15
-  <TrackedObjectTypes>k__BackingField: 00000000
+  <TrackedObjectTypes>k__BackingField: 
