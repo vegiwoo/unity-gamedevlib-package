@@ -184,9 +184,9 @@ MonoBehaviour:
   <GroundLayers>k__BackingField:
   - serializedVersion: 2
     m_Bits: 128
-  <IsDeathByTimer>k__BackingField: 0
-  <DeathTimerValue>k__BackingField: 0
-  <DelayDeathByTimer>k__BackingField: 0
+  <IsDeathByTimer>k__BackingField: 1
+  <DeathTimerValue>k__BackingField: 10
+  <DelayDeathByTimer>k__BackingField: 3
 --- !u!114 &597597882172187642
 MonoBehaviour:
   m_ObjectHideFlags: 0
