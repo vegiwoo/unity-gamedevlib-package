@@ -1,4 +1,3 @@
-using System;
 using GameDevLib.Enums;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +26,8 @@ namespace GameDevLib.Audio
         
         [field: SerializeField] 
         public AudioClip[] AudioClipsToPlay { get; set; }
+
+        [field: SerializeField] public bool IsPinched { get; set; } = true;
         #endregion
         
         #region Properties
@@ -64,10 +65,9 @@ namespace GameDevLib.Audio
 
             if (AudioClipsToPlay.Length > 0)
             {
-                for (var index = 0; index < AudioClipsToPlay.Length; index++)
+                foreach (var clip in AudioClipsToPlay)
                 {
                     var sourceToPlay = gameObject.AddComponent<AudioSource>();
-                    var clip = AudioClipsToPlay[index];
                     MakeAudio(clip, ref sourceToPlay);
                     RandomSourcesToPlay.Add(sourceToPlay);
                 }
@@ -117,7 +117,7 @@ namespace GameDevLib.Audio
         /// </remarks>
         private IEnumerator PlayCoroutine(SoundType type,  float volume)
         {
-            var pinch =  Random.Range(0.55f, 1.0f);
+            var pinch = IsPinched ? Random.Range(0.55f, 1.0f) : 1.0f;
             
             switch (type)
             {
