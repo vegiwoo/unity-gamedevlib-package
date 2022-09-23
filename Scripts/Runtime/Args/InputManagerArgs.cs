@@ -6,12 +6,14 @@ namespace GameDevLib.Args
     public sealed class InputManagerArgs
     {
         #region Properties
+        
         public Vector2? Moving { get;}
         public bool? Running { get;}
         public bool? Jumping { get; set; }
         public bool? Aiming { get;}
         public bool Lighting { get;}
         public bool Firing { get;}
+        
         #endregion
 
         #region Constructors
