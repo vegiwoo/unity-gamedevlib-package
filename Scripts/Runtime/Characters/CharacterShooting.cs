@@ -17,7 +17,7 @@ namespace GameDevLib.Characters
         private Color AimColor { get; set; }
         
         [SerializeField] 
-        private InputManagerEvent inputEvent;
+        private InputEvent inputEvent;
         
         private Weapon.Weapon _currentWeapon;
         private Camera _mainCamera;

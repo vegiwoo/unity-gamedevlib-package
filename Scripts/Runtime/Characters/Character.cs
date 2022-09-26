@@ -1,8 +1,9 @@
 using System.Collections;
 using GameDevLib.Animations;
+using GameDevLib.Args;
+using GameDevLib.Events;
 using GameDevLib.Helpers;
 using GameDevLib.Stats;
-using JetBrains.Annotations;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
@@ -15,43 +16,48 @@ namespace GameDevLib.Characters
     public abstract class Character : MonoBehaviour
     {
         #region Links
-        
         [field: Header("Links")]
-        [field: SerializeField, Tooltip("Physical bodies in a ragdoll object")] 
-        private Rigidbody[] rigidBodiesForRagdoll;
-
-        [field:SerializeField] 
-        public CharacterStats Stats { get; private set; }
-        
-        [field: SerializeField, ReadonlyField]
-        public float CurrentHp { get; protected set; }
-        
-        [field: SerializeField, ReadonlyField]
-        public float CurrentSpeed { get; set; }
-
         [field: SerializeField, Tooltip("What layers the character uses as ground")]
         public LayerMask[] GroundLayers { get; set; }
+
+        [field: SerializeField, Tooltip("Physical bodies in a ragdoll object")] 
+        private Rigidbody[] rigidBodiesForRagdoll;
         
         [field: Header("Kill by timer")]
         [field: SerializeField] 
-        public bool IsDeathByTimer { get; set; } = false;
+        public bool IsDeathByTimer { get; set; }
         [field: SerializeField, Tooltip("in sec")]
         public float DeathTimerValue { get; set; } = 3f;
 
         [field: SerializeField, Tooltip("Delay before destruction after death by timer")] 
         private float DelayDeathByTimer { get; set; } = 5f;
 
-        private Coroutine _killOnTimerCoroutine;
-
-        public Animator Animator { get; private set; }
-
+        [field: Header("Stats")]
+        [field:SerializeField] 
+        public CharacterStats Stats { get; private set; }
+        
+        [field: Header("Events")]
+        public UnitEvent UnitEvent { get; set; }
+        
         #endregion
         
-        #region Constants and variables 
+        #region Properties
+        [field: SerializeField, ReadonlyField] public float CurrentHp { get; protected set; }
+        [field: SerializeField, ReadonlyField] public float CurrentSpeed { get; set; }
+        
+        public Animator Animator { get; private set; }
+        
+        #endregion
+        
+        #region Fields
+        
+        private Coroutine _killOnTimerCoroutine;
         
         public delegate void CharacterHandler(CharacterArgs args);  
-        [CanBeNull]  public event CharacterHandler? CharacterHandlerNotify;
+        public event CharacterHandler? CharacterHandlerNotify;
+        
         #endregion
+        
 
         #region MonoBehaviour methods
 
@@ -87,7 +93,7 @@ namespace GameDevLib.Characters
         /// <returns></returns>
         public virtual void OnHit(float damage)
         {
-            CurrentHp -= damage;
+            CurrentHp = CurrentHp - damage > 0 ? CurrentHp - damage : 0;
         }
 
         private IEnumerator KillOnTimerCoroutine()

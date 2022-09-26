@@ -14,7 +14,7 @@ namespace GameDevLib.Managers
     {
         #region Links
         [SerializeField] 
-        private InputManagerEvent inputManagerEvent;
+        private InputEvent inputEvent;
         private PlayerInput _playerInput;
         #endregion
 
@@ -167,7 +167,7 @@ namespace GameDevLib.Managers
         private void Notify()
         {
             var args = new InputManagerArgs( _isLighting, _isFiring, _movingDestination, _isRunning, _isJumping, _isAiming);
-            inputManagerEvent.Notify(args);
+            inputEvent.Notify(args);
         }
         #endregion
     }

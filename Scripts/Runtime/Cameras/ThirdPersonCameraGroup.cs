@@ -16,7 +16,7 @@ namespace GameDevLib.Cameras {
         [Header("Following")]
         [SerializeField] private Transform cameraFollowing;
         [Header("Events")]
-        [SerializeField] private InputManagerEvent inputManagerEvent;
+        [SerializeField] private InputEvent inputEvent;
         [Header("Others")]
         [SerializeField] private int priorityBoostAmount = 10;
         [SerializeField] private bool isShowAims;
@@ -59,12 +59,12 @@ namespace GameDevLib.Cameras {
 
         private void OnEnable()
         {
-            inputManagerEvent.Attach(this);
+            inputEvent.Attach(this);
         }
 
         private void OnDisable()
         {
-            inputManagerEvent.Detach(this);
+            inputEvent.Detach(this);
         }
         
         private void Update()

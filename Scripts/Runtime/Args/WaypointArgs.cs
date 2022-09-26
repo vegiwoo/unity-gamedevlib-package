@@ -20,5 +20,4 @@ namespace GameDevLib.Args
             IsAttentionIsIncreased = isAttentionIsIncreased;
         }
     }
-
 }

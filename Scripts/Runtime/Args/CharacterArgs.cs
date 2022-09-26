@@ -1,6 +1,6 @@
 
 // ReSharper disable once CheckNamespace
-namespace GameDevLib.Characters
+namespace GameDevLib.Args
 {
     public sealed class CharacterArgs
     {

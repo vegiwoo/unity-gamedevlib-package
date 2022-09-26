@@ -11,11 +11,11 @@ using UnityEngine;
 namespace GameDevLib.Characters
 {
     [RequireComponent(typeof(CharacterController), typeof(Animator), typeof(AudioIsPlaying))]
-    public class HeroMovement : MonoBehaviour, Interfaces.IObserver<InputManagerArgs>, IAnimatorParametersWorkable
+    public class HeroMovement : MonoBehaviour, IObserver<InputManagerArgs>, IAnimatorParametersWorkable
     {
         #region Links
         [Header("Input")] 
-        [SerializeField] private InputManagerEvent inputManagerEvent;
+        [SerializeField] private InputEvent inputEvent;
 
         private Character _character;
         private Camera _mainCamera;
@@ -79,12 +79,12 @@ namespace GameDevLib.Characters
 
         private void OnEnable()
         {
-            inputManagerEvent.Attach(this);
+            inputEvent.Attach(this);
         }
 
         private void OnDisable()
         {
-            inputManagerEvent.Detach(this);
+            inputEvent.Detach(this);
         }
         #endregion
 

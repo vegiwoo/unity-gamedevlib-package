@@ -1,6 +1,3 @@
-
-// ReSharper disable once CheckNamespace
-
 using GameDevLib.Enums;
 using UnityEngine;
 

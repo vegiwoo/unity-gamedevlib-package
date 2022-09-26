@@ -16,7 +16,7 @@ namespace GameDevLib.Routes
         #region Links
         [SerializeField] public RouteStats stats;
         [SerializeField] private WayPoint[] wayPoints; 
-        private CharacterManagerEvent _characterManagerEvent;
+        private RouteEvent routeEvent;
         #endregion
         
         #region Constants and variables
@@ -57,17 +57,17 @@ namespace GameDevLib.Routes
 
         private void OnEnable()
         {
-            if (_characterManagerEvent != null)
+            if (routeEvent != null)
             {
-                _characterManagerEvent.Attach(this);
+                routeEvent.Attach(this);
             }
         }
         
         private void OnDisable()
         {
-            if (_characterManagerEvent != null)
+            if (routeEvent != null)
             {
-                _characterManagerEvent.Detach(this);
+                routeEvent.Detach(this);
             }
         }
 
@@ -75,10 +75,10 @@ namespace GameDevLib.Routes
         
         #region Functionality
 
-        public void Init(CharacterManagerEvent characterManagerEvent)
+        public void Init(RouteEvent routeEvent)
         {
-            _characterManagerEvent = characterManagerEvent;
-            _characterManagerEvent.Attach(this);
+            this.routeEvent = routeEvent;
+            this.routeEvent.Attach(this);
         }
         
         /// <summary>

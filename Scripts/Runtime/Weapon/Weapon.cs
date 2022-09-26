@@ -24,7 +24,7 @@ namespace GameDevLib.Weapon
         public Transform ShotPoint { get; set; }
         
         [SerializeField] 
-        private InputManagerEvent inputEvent;
+        private InputEvent inputEvent;
         
         [SerializeField] 
         private Light flashLight;

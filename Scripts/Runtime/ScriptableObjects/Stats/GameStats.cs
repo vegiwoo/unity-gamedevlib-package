@@ -14,7 +14,7 @@ namespace GameDevLib.Stats
         public float CriticalThreshold { get; set; } = 15;
         
         [field: Header("Effects")]
-        [field: SerializeField, Range(10f, 30.0f)] public float EffectDuration { get; set; } = 15.0f;
+        [field: SerializeField, Range(5f, 20.0f)] public float EffectDuration { get; set; } = 10.0f;
         
     }
 }

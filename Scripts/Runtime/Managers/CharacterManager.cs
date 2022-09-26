@@ -16,7 +16,7 @@ namespace GameDevLib.Managers
         
         [SerializeField] private Character characterPrefab;
         [SerializeField] private CharacterRoute[] routes;
-        [SerializeField] private CharacterManagerEvent characterManagerEvent;
+        [SerializeField] private RouteEvent routeEvent;
         
         #endregion
 
@@ -37,7 +37,7 @@ namespace GameDevLib.Managers
 
             foreach (var route in routes)
             {
-                route.Init(characterManagerEvent);
+                route.Init(routeEvent);
             }
 
             StartCoroutine(CheckingCharactersOnRoutes());
@@ -72,7 +72,7 @@ namespace GameDevLib.Managers
                         _characters.Add(newCharacter, newCharacterMovement);
 
                         var args = new RouteArgs(route.stats.RouteName, 1, 0);
-                        characterManagerEvent.Notify(args);
+                        routeEvent.Notify(args);
                     }
                     else
                     {
@@ -98,7 +98,7 @@ namespace GameDevLib.Managers
                 Destroy(character.gameObject);
 
                 var args = new RouteArgs(characterMovement.Route.stats.RouteName, 0, 1);
-                characterManagerEvent.Notify(args);
+                routeEvent.Notify(args);
             }
 
             yield return null;
