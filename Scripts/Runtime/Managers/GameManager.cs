@@ -19,12 +19,12 @@ namespace GameDevLib.Managers
         
         #region MonoBehaviour methods
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             PlayerEvent.Attach(this);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             PlayerEvent.Detach(this);
         }

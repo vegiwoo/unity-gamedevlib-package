@@ -33,11 +33,10 @@ namespace GameDevLib.Characters
         private float DelayDeathByTimer { get; set; } = 5f;
 
         [field: Header("Stats")]
-        [field:SerializeField] 
-        public CharacterStats Stats { get; private set; }
+        [field:SerializeField] public CharacterStats CharacterStats { get; set; }
         
         [field: Header("Events")]
-        public UnitEvent UnitEvent { get; set; }
+        [field:SerializeField] public UnitEvent UnitEvent { get; set; }
         
         #endregion
         
@@ -66,12 +65,12 @@ namespace GameDevLib.Characters
             Animator = GetComponent<Animator>();
         }
         
-        protected void Start()
+        protected virtual void Start()
         {
             ToggleRagdoll(false);
             
-            CurrentHp = Stats.MaxHp;
-            CurrentSpeed = Stats.MoveSpeed;
+            CurrentHp = CharacterStats.MaxHp;
+            CurrentSpeed = CharacterStats.MoveSpeed;
         }
 
         protected void Update()
@@ -120,7 +119,9 @@ namespace GameDevLib.Characters
                 rb.isKinematic = !enable;
             }
         }
-        
+
+        protected virtual void Notify() {}
+
         #endregion
     }
 }

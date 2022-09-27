@@ -13,8 +13,8 @@ namespace GameDevLib.Stats
         public CharacterType characterType;
 
         [field: Header("Common")]
-        [field: SerializeField] 
-        public float MaxHp { get; set; }
+        [field: SerializeField] public float MinHp { get; set; }
+        [field: SerializeField] public float MaxHp { get; set; }
 
         [field: Header("Movement")]
         [field: SerializeField, Range(1f, 5f)]

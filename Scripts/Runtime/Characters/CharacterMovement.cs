@@ -28,7 +28,7 @@ namespace GameDevLib.Characters
         public CharacterRoute Route { get; set; }
         
         [field: SerializeField, Tooltip("Current state of enemy"), ReadonlyField] 
-        public CharacterState CurrentState { get; private set; }
+        public UnitState CurrentState { get; private set; }
 
         private NavMeshAgent _navMeshAgent;
         private Animator _animator;
@@ -76,39 +76,38 @@ namespace GameDevLib.Characters
 
         private void Start()
         {
-            if(_character.Stats.characterType == CharacterType.Enemy)
+            if(_character.CharacterStats.characterType == CharacterType.Enemy)
             {
                 gameObject.tag = Data.EnemyTag;
             }
 
-            _character.CurrentSpeed = _character.Stats.MoveSpeed;
+            _character.CurrentSpeed = _character.CharacterStats.MoveSpeed;
             
             _navMeshAgent.speed = _character.CurrentSpeed;
-            _navMeshAgent.stoppingDistance = _character.Stats.StopDistanceForWaypoints;
+            _navMeshAgent.stoppingDistance = _character.CharacterStats.StopDistanceForWaypoints;
             _navMeshAgent.updatePosition = false;
             _navMeshAgent.updateRotation = false;
             
             _isMovingForward = true;
             _currentWaypointIndex = 0;
             
-            _trackedTrigger.Init(_character.Stats.TrackedObjectTypes);
+            _trackedTrigger.Init(_character.CharacterStats.TrackedObjectTypes);
             
             currentCountdownValue = 0;
 
-            _ikControl.HeadTrackingDistance = _character.Stats.MaxDistance;
+            _ikControl.HeadTrackingDistance = _character.CharacterStats.MaxDistance;
 
             AssignAnimationIDs();
             
-            ToggleCharacterState(CharacterState.Patrol);
+            ToggleCharacterState(UnitState.Walking);
         }
 
         private void Update()
         {
-            if (CurrentState != CharacterState.Died)
-            {
-                OnMovement();
-                DirectCharacterToPointOfInterest();
-            }
+            if (CurrentState == UnitState.Died) return;
+            
+            OnMovement();
+            DirectCharacterToPointOfInterest();
         }
 
         private void OnEnable()
@@ -158,7 +157,7 @@ namespace GameDevLib.Characters
             {
                 var direction = currentPoint.position - transform.position;
                 var lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));  
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _character.Stats.RotationSmoothTime);;
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * _character.CharacterStats.RotationSmoothTime);;
             }
             
             // Fix
@@ -172,13 +171,13 @@ namespace GameDevLib.Characters
         /// Changes state of character.
         /// </summary>
         /// <param name="state">New state of character.</param>
-        private void ToggleCharacterState(CharacterState state)
+        private void ToggleCharacterState(UnitState state)
         {
             CurrentState = state;
 
             switch (CurrentState)
             {
-                case CharacterState.Patrol:
+                case UnitState.Walking:
                     if (Route != null)
                     {
                         _pointOfInterest = null;
@@ -190,11 +189,11 @@ namespace GameDevLib.Characters
                         Debug.LogError("An attempt to move a character without specifying a route!");
                     }
                     break;
-                case CharacterState.Attack:
+                case UnitState.Attack:
                     //_enemyAttackCoroutine = StartCoroutine(EnemyAttackCoroutine());
                     _trackedTrigger.TrackedTriggerNotify -= TrackedTriggerHandler;
                     break;
-                case CharacterState.Died:
+                case UnitState.Died:
                     
                     StopAllCoroutines();
                     
@@ -212,13 +211,13 @@ namespace GameDevLib.Characters
         /// </summary>
         private void TrackedTriggerHandler(TrackedTriggerArgs args)
         {
-            if (!_character.Stats.TrackedObjectTypes.Contains(args.TrackedObjectType)) return;
+            if (!_character.CharacterStats.TrackedObjectTypes.Contains(args.TrackedObjectType)) return;
 
             switch (args.TrackedObjectType)
             {
                 case TrackedObjectType.Hero:
                     _pointOfInterest = args.TrackedObjectTransform;
-                    ToggleCharacterState(CharacterState.Attack);
+                    ToggleCharacterState(UnitState.Attack);
                     break;
             }
         }
@@ -227,7 +226,7 @@ namespace GameDevLib.Characters
         {
             if (args.DiedByTimer)
             {
-               ToggleCharacterState(CharacterState.Died);
+               ToggleCharacterState(UnitState.Died);
             }
         }
 
@@ -236,8 +235,8 @@ namespace GameDevLib.Characters
             if (_pointOfInterest == null) return null;
 
             var distanceToPointOfInterest = Vector3.Distance(transform.position, _pointOfInterest.position);
-            var isCanGetCloser = distanceToPointOfInterest > _character.Stats.MinDistance &&
-                                 distanceToPointOfInterest < _character.Stats.MaxDistance;
+            var isCanGetCloser = distanceToPointOfInterest > _character.CharacterStats.MinDistance &&
+                                 distanceToPointOfInterest < _character.CharacterStats.MaxDistance;
             return (distanceToPointOfInterest, isCanGetCloser);
         }
         
@@ -245,7 +244,7 @@ namespace GameDevLib.Characters
         {
             if(gameObject == null || 
                !_navMeshAgent.isActiveAndEnabled || 
-               CurrentState != CharacterState.Attack || 
+               CurrentState != UnitState.Attack || 
                _pointOfInterest == null) return;
 
             var dist = GetDistanceToPointOfInterest();
@@ -259,7 +258,7 @@ namespace GameDevLib.Characters
 
         private IEnumerator CharacterPatrolCoroutine()
         {
-            while (CurrentState == CharacterState.Patrol && _pointOfInterest == null)
+            while (CurrentState == UnitState.Walking && _pointOfInterest == null)
             {
                 var currentWaypoint = Route[RoutePositionType.Current, _currentWaypointIndex];
 
@@ -291,7 +290,7 @@ namespace GameDevLib.Characters
                     _currentWaypointIndex = result.NewCurrentIndex;
                 }
 
-                if (CurrentState == CharacterState.Patrol)
+                if (CurrentState == UnitState.Walking)
                 {
                     yield return null;
                 }
@@ -309,7 +308,7 @@ namespace GameDevLib.Characters
         /// </summary>
         private IEnumerator CharacterAttackCoroutine()
         {
-            while (CurrentState == CharacterState.Attack && _pointOfInterest != null)
+            while (CurrentState == UnitState.Attack && _pointOfInterest != null)
             {
                 var dist = GetDistanceToPointOfInterest();
 
@@ -327,7 +326,7 @@ namespace GameDevLib.Characters
                     _navMeshAgent.ResetPath();
                     yield return new WaitForSeconds(Route.stats.WaitTime);
                     
-                    ToggleCharacterState(CharacterState.Patrol);
+                    ToggleCharacterState(UnitState.Walking);
                     //_characterAttackCoroutine = null;
                     yield break;
                 }

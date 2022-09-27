@@ -64,8 +64,8 @@ namespace GameDevLib.Characters
         private void Start()
         {
             // reset our timeouts on start
-            _jumpTimeoutDelta = _character.Stats.JumpTimeout;
-            _fallTimeoutDelta = _character.Stats.FallTimeout;
+            _jumpTimeoutDelta = _character.CharacterStats.JumpTimeout;
+            _fallTimeoutDelta = _character.CharacterStats.FallTimeout;
 
             AssignAnimationIDs();
         }
@@ -92,7 +92,7 @@ namespace GameDevLib.Characters
 
         private void GroundedCheck()
         {
-            var stats = _character.Stats;
+            var stats = _character.CharacterStats;
             var position = transform.position;
             // set sphere position, with offset
             var spherePosition = new Vector3(position.x, position.y - stats.GroundedOffset, position.z);
@@ -110,7 +110,7 @@ namespace GameDevLib.Characters
         {
             if (_args == null || _args.Moving == null) return;
             
-            var stats = _character.Stats;
+            var stats = _character.CharacterStats;
             
             // Walking or running character
             // set target speed based on move speed, sprint speed and if sprint is pressed
@@ -118,7 +118,7 @@ namespace GameDevLib.Characters
             float targetSpeed = default;
             if (_args.Moving != Vector2.zero)
             {
-                targetSpeed = _args.Running != null && _args.Running.Value ? stats.MoveSpeed * _character.Stats.AccelerationFactor : stats.MoveSpeed;
+                targetSpeed = _args.Running != null && _args.Running.Value ? stats.MoveSpeed * _character.CharacterStats.AccelerationFactor : stats.MoveSpeed;
             }
             
             // a reference to the players current horizontal velocity
@@ -180,7 +180,7 @@ namespace GameDevLib.Characters
         {
             if(_args == null || _args.Jumping == null) return;
             
-            var stats = _character.Stats;
+            var stats = _character.CharacterStats;
 
             if (isGrounded)
             {

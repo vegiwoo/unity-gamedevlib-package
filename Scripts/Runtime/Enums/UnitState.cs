@@ -1,8 +1,8 @@
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Enums
 {
-    public enum CharacterState
+    public enum UnitState
     {
-        Patrol, Attack, Died
+        Walking, Attack, Died
     }
 }

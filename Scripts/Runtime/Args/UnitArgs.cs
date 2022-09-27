@@ -10,7 +10,7 @@ namespace GameDevLib.Args {
     {
         #region Properties
         // HP
-        public float CurrentHp { get; }
+        public (float min, float current, float max) Hp { get; }
         public bool IsUnitInvulnerable { get; }
         
         // Game points 
@@ -25,9 +25,9 @@ namespace GameDevLib.Args {
         
         #region Constructors 
         
-        public UnitArgs(float currentHp, bool isUnitInvulnerable,  float velocity, bool isSpeedUp, bool isSpeedDown, int gamePoints = 0)
+        public UnitArgs((float min, float current, float max) hp , bool isUnitInvulnerable,  float velocity, bool isSpeedUp, bool isSpeedDown, int gamePoints = 0)
         {
-            CurrentHp = currentHp;
+            Hp = hp;
             IsUnitInvulnerable = isUnitInvulnerable;
             Velocity = Math.Round(velocity, 2);
             IsSpeedUp = isSpeedUp;
