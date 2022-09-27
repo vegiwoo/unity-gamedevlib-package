@@ -37,8 +37,7 @@ namespace GameDevLib.Characters
         private IKControl _ikControl;
 
         private Coroutine _characterPatrolCoroutine;
-        //private Coroutine _characterAttackCoroutine;
-        
+
         private Transform _pointOfInterest;
         
         /// <summary>
