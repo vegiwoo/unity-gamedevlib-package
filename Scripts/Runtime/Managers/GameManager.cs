@@ -10,10 +10,7 @@ namespace GameDevLib.Managers
     public abstract class GameManager : MonoBehaviour, IObserver<UnitArgs>
     {
         #region Links
-        [field: Header("Stats")]
         [field: SerializeField] public GameStats GameStats { get; set; }
-        
-        [field: Header("Events")]
         [field: SerializeField] public UnitEvent PlayerEvent { get; set; }
         #endregion
         
