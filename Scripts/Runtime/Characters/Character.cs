@@ -57,7 +57,6 @@ namespace GameDevLib.Characters
         
         #endregion
         
-
         #region MonoBehaviour methods
 
         protected void Awake()
