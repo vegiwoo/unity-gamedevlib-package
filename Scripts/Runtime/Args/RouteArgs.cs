@@ -1,8 +1,9 @@
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public class RouteArgs 
+    public class RouteArgs : EventArgs
     {
         public string RouteName { get; }
         public int NumberCharactersCreated { get; }

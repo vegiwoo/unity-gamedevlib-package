@@ -1,3 +1,4 @@
+using System;
 using GameDevLib.Args;
 using UnityEngine;
 
@@ -5,5 +6,5 @@ using UnityEngine;
 namespace GameDevLib.Events
 {
     [CreateAssetMenu(fileName = "EffectEvent", menuName = "SO Events/EffectEvent", order = 3)]
-    public class EffectEvent : GameEvent<EffectArgs> { }
+    public class EffectEvent : GameEvent<EventArgs> { }
 }

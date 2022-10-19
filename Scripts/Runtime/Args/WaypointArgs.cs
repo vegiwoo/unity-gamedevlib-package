@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public struct WaypointArgs
+    public class WaypointArgs : EventArgs
     {
         public int NewCurrentIndex { get; }
         public Transform NewPoint { get; }

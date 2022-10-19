@@ -1,10 +1,11 @@
+using System;
 using GameDevLib.Enums;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public class TrackedTriggerArgs
+    public class TrackedTriggerArgs : EventArgs
     {
         public TrackedObjectType TrackedObjectType { get; } 
         public Transform TrackedObjectTransform { get; } 

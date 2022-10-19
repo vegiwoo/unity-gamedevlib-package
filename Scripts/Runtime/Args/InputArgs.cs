@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public sealed class InputManagerArgs
+    public sealed class InputManagerArgs : EventArgs
     {
         #region Properties
         

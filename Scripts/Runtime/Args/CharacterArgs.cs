@@ -1,8 +1,9 @@
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace GameDevLib.Args
 {
-    public sealed class CharacterArgs
+    public sealed class CharacterArgs : EventArgs
     {
         public bool DiedByTimer { get; }
 
